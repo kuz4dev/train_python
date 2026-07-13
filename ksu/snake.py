@@ -53,6 +53,9 @@ def draw_grid():
         pygame.draw.line(screen, (161,206,247), (x, upper_edge), (x, HEIGHT - down_edge), 2)
         x += BLOCK
 
+def test_quit():
+    
+
 running = True
 
 while running:
@@ -103,3 +106,7 @@ while running:
     clock.tick(SPEED)
 
 pygame.quit()
+
+
+# FIXME:
+# Добавить комментарии
