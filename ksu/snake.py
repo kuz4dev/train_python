@@ -7,40 +7,51 @@ clock = pygame.time.Clock()
 
 direction = 'RIGHT'
 
+# размеры экрана и блока
 WIDTH = 1000
 HEIGHT = 800
 BLOCK = 20
+SPEED = 10
+
+# отступы от краев экрана для сетки
 rl_edge = 80
 upper_edge = 100
 down_edge = 80
 
+# координаты сетки
+FIELD_LEFT = rl_edge
+FIELD_RIGHT = WIDTH - rl_edge
+FIELD_UP = upper_edge
+FIELD_DOWN = HEIGHT - down_edge
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
-snake_position = [100, 60]
+snake_position = [100, 100]
 
 snake_body = [
-    [100, 60],
-    [80, 60]
-              ]
+    [100, 100],
+    [80, 100]
+]
 
-food_pos = [random.randrange(0, WIDTH // BLOCK) * BLOCK,
-            random.randrange(0, WIDTH // BLOCK) * BLOCK
-            ]
+food_pos = [
+    random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK),
+    random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
+]
 
 def draw_grid():
     #горизонтальные линии. -80 - отступ
     y = upper_edge
     while y <= HEIGHT - down_edge:
-        pygame.draw.line(screen, (240,235,249), (rl_edge, y), (WIDTH - rl_edge, y), 2)
+        pygame.draw.line(screen, (161,206,247), (rl_edge, y), (WIDTH - rl_edge, y), 2)
         y += BLOCK
 
-    
-
-    
-
+    #вертикальные
+    x = rl_edge
+    while x <= WIDTH - rl_edge:
+        pygame.draw.line(screen, (161,206,247), (x, upper_edge), (x, HEIGHT - down_edge), 2)
+        x += BLOCK
 
 running = True
 
@@ -89,6 +100,6 @@ while running:
 
     pygame.display.flip()
 
-    clock.tick(30)
+    clock.tick(SPEED)
 
 pygame.quit()
