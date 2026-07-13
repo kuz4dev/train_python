@@ -31,7 +31,7 @@ food_pos = [random.randrange(0, WIDTH // BLOCK) * BLOCK,
             ]
 
 def draw_grid():
-    #горизонтальные линии. 80 - отступ
+    #горизонтальные линии. -80 - отступ
     y = upper_edge
     while y <= HEIGHT - down_edge:
         pygame.draw.line(screen, (240,235,249), (rl_edge, y), (WIDTH - rl_edge, y), 2)
@@ -78,7 +78,6 @@ while running:
     screen.fill((161,241,247))
 
     draw_grid()
-
 
     snake_body.insert(0, list(snake_position))
     snake_body.pop()
