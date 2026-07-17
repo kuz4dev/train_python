@@ -29,6 +29,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
+# -> font.font script b/ Climate Crisis/ impact
+pause_font = pygame.font.SysFont(None, 60)
+
 #голова
 snake_position = [100, 160]
 
@@ -59,60 +62,75 @@ def draw_grid():
         x += BLOCK
 
 
+
 running = True
+
+# пауза
+paused = False
 
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                paused = not paused
+        
 
-        elif event.type == pygame.KEYDOWN:
+        if not paused:
+            if event.type == pygame.KEYDOWN:
 
-#изменение направления змейки
-            if event.key == pygame.K_UP and direction != 'DOWN':
-                direction = 'UP'
-            elif event.key == pygame.K_DOWN and direction != 'UP':
-                direction = 'DOWN'
-            elif event.key == pygame.K_LEFT and direction != 'RIGHT':
-                direction = 'LEFT'
-            elif event.key == pygame.K_RIGHT and direction != 'LEFT':
-                direction = 'RIGHT'
+        #изменение направления змейки
+                if event.key == pygame.K_UP and direction != 'DOWN':
+                    direction = 'UP'
+                elif event.key == pygame.K_DOWN and direction != 'UP':
+                    direction = 'DOWN'
+                elif event.key == pygame.K_LEFT and direction != 'RIGHT':
+                    direction = 'LEFT'
+                elif event.key == pygame.K_RIGHT and direction != 'LEFT':
+                    direction = 'RIGHT'
 
-    # движение
-    if direction == 'UP':
-        snake_position[1] -= BLOCK
+            # движение
+            if direction == 'UP':
+                snake_position[1] -= BLOCK
 
-    elif direction == 'DOWN':
-        snake_position[1] += BLOCK
+            elif direction == 'DOWN':
+                snake_position[1] += BLOCK
 
-    elif direction == 'LEFT':
-        snake_position[0] -= BLOCK
+            elif direction == 'LEFT':
+                snake_position[0] -= BLOCK
 
-    elif direction == 'RIGHT':
-        snake_position[0] += BLOCK
+            elif direction == 'RIGHT':
+                snake_position[0] += BLOCK
 
-    screen.fill((161,241,247))
+            screen.fill((161,241,247))
 
-    # сетка
-    draw_grid()
+            # сетка
+            draw_grid()
 
-    # постоянная перезапись головы и удаление хвоста для иллюзии движения
-    snake_body.insert(0, list(snake_position))
-    snake_body.pop()
+            # постоянная перезапись головы и удаление хвоста для иллюзии движения
+            snake_body.insert(0, list(snake_position))
+            snake_body.pop()
 
-    # рендер каждой части змеюки
-    for one in snake_body:
-        pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], BLOCK, BLOCK))
+            # рендер каждой части змеюки
+            for one in snake_body:
+                pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], BLOCK, BLOCK))
 
-    # проверка на столкновение с границами
-    if (snake_position[0] == FIELD_RIGHT and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
-        snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN and direction == "DOWN"):
+            # проверка на столкновение с границами
+            if (snake_position[0] == FIELD_RIGHT - BLOCK and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
+                snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN - BLOCK and direction == "DOWN"):
 
-        running = False
+                running = False
 
-    # рендер тест еды
-    pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(food_pos[0], food_pos[1], BLOCK, BLOCK))
+            # рендер тест еды
+            pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(food_pos[0], food_pos[1], BLOCK, BLOCK))
+
+        if paused:
+            # -text
+            paused_text = pause_font.render("Пауза!", True, (82,87,91))
+            pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+            screen.blit(paused_text, pause_rect)
 
     pygame.display.flip()
 
@@ -120,6 +138,3 @@ while running:
 
 pygame.quit()
 
-
-# FIXME:
-# Добавить комментарии
