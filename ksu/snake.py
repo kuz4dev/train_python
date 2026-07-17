@@ -5,6 +5,7 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
+#начальное направление 
 direction = 'RIGHT'
 
 # размеры экрана и блока
@@ -28,18 +29,22 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
-snake_position = [100, 100]
+#голова
+snake_position = [100, 160]
 
+#все части змейки
 snake_body = [
     [100, 100],
     [80, 100]
 ]
 
+# тестовая еда
 food_pos = [
     random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK),
     random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
 ]
 
+# сетка
 def draw_grid():
     #горизонтальные линии. -80 - отступ
     y = upper_edge
@@ -53,8 +58,6 @@ def draw_grid():
         pygame.draw.line(screen, (161,206,247), (x, upper_edge), (x, HEIGHT - down_edge), 2)
         x += BLOCK
 
-def test_quit():
-    
 
 running = True
 
@@ -91,14 +94,24 @@ while running:
 
     screen.fill((161,241,247))
 
+    # сетка
     draw_grid()
 
+    # постоянная перезапись головы и удаление хвоста для иллюзии движения
     snake_body.insert(0, list(snake_position))
     snake_body.pop()
 
+    # рендер каждой части змеюки
     for one in snake_body:
         pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], BLOCK, BLOCK))
 
+    # проверка на столкновение с границами
+    if (snake_position[0] == FIELD_RIGHT and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
+        snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN and direction == "DOWN"):
+
+        running = False
+
+    # рендер тест еды
     pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(food_pos[0], food_pos[1], BLOCK, BLOCK))
 
     pygame.display.flip()
