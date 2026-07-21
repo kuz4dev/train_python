@@ -41,11 +41,19 @@ snake_body = [
     [80, 100]
 ]
 
-# тестовая еда
-food_pos = [
-    random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK),
-    random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
-]
+#ивент на время для еды
+food_event = pygame.USEREVENT +1 
+pygame.time.set_timer(food_event, 4000)
+current_food = []
+
+#периодическое появление еды. не больше 4 за раз
+def get_food():
+    if len(current_food) < 4:
+        food_pos = [
+            random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK), 
+            random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
+            ]
+        current_food.append(food_pos)
 
 # сетка
 def draw_grid():
@@ -62,7 +70,6 @@ def draw_grid():
         x += BLOCK
 
 
-
 running = True
 
 # пауза
@@ -72,13 +79,19 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            running = False 
+
+        if event.type == food_event and not paused:
+            get_food() 
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused
+        
 
             if not paused:
-        #изменение направления змейки
+
+            #изменение направления змейки
                 if event.key == pygame.K_UP and direction != 'DOWN':
                     direction = 'UP'
                 elif event.key == pygame.K_DOWN and direction != 'UP':
@@ -109,7 +122,19 @@ while running:
 
         # постоянная перезапись головы и удаление хвоста для иллюзии движения
         snake_body.insert(0, list(snake_position))
-        snake_body.pop()
+
+        ate = False
+
+        #проверка на столкновение с едой
+        for food in current_food:
+            if food == snake_position:
+                current_food.remove(food)
+                ate = True
+                break
+        
+        #удаление хвоста
+        if not ate:
+            snake_body.pop()
 
         # рендер каждой части змеюки
         for one in snake_body:
@@ -119,12 +144,20 @@ while running:
         if (snake_position[0] == FIELD_RIGHT - BLOCK and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
             snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN - BLOCK and direction == "DOWN"):
 
-            running = False
+            #sound
 
-        # рендер тест еды
-        pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(food_pos[0], food_pos[1], BLOCK, BLOCK))
+            crash_time = pygame.USEREVENT +2
+            pygame.time.set_timer(crash_time, 2500)
+            if event.type == crash_time 
+            
+                running = False
 
-    else:
+        #рендер еды
+        for piece in current_food:
+            pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], BLOCK, BLOCK))
+
+    #окно паузы
+    if paused:
         # -text
         paused_text = pause_font.render("Пауза!", True, (82,87,91))
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
@@ -135,4 +168,3 @@ while running:
     clock.tick(SPEED)
 
 pygame.quit()
-

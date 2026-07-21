@@ -25,7 +25,6 @@ spaceship_y = HEIGHT - spaceship_height - 30
 #скорость корабля
 spaceship_speed = 8
 
-
 #широта метеорита
 meteorit_x = WIDTH - 30
 #высота метеорита
@@ -35,6 +34,16 @@ meteorit_radius = 15
 #скорость метеорита
 meteorit_speed = 5
 
+#широта снаряда
+bullet_x = WIDTH
+#высота снаряда
+bullet_y = HEIGHT
+#радиус снаряда
+bullet_radius = 25
+#скорость снаряда
+bullet_speed = 7
+
+bullets = []
 meteorits = []
 spawn_timer = 0
 # Интервал между появлением метеоритов в миллисекундах
@@ -52,6 +61,9 @@ running = True
 
 while running:
     for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                bullets.append({"x": spaceship_x + spaceship_width, "y": spaceship_y + (spaceship_height // 2)})
         if event.type == pygame.QUIT:
             running = False
 
@@ -68,7 +80,6 @@ while running:
     if spaceship_y > HEIGHT - spaceship_height:
         spaceship_y = HEIGHT - spaceship_height
 
-
     # Логика метеоритов
     spawn_timer += 1
 
@@ -80,18 +91,39 @@ while running:
 
     for meteorit in meteorits:
         meteorit["x"] -= meteorit_speed
+
+    for bullet in bullets:
+        bullet["x"] += bullet_speed
+        
+    bullets = [b for b in bullets if b["x"] < WIDTH]
     
     spaceship_rect = pygame.Rect(spaceship_x, spaceship_y, spaceship_width, spaceship_height)
-    
+
     remaining_meteorits = []
 
     for meteorit in meteorits:
+        # Флаг на столкновение
+        hit = False
+        
         meteorit_rect = pygame.Rect(meteorit["x"] - meteorit_radius, meteorit["y"] - meteorit_radius, meteorit_radius * 2, meteorit_radius * 2)
 
         if spaceship_rect.colliderect(meteorit_rect):
             lives -= 1
-        else:
+            hit = True
+
+        for bullet in bullets:
+            bullet_rect = pygame.Rect(bullet["x"] - bullet_radius, bullet["y"] - bullet_radius, bullet_radius * 2, bullet_radius * 2)
+            
+            if bullet_rect.colliderect(meteorit_rect):
+                hit = True
+                score += 1
+                if bullet in bullets:
+                    bullets.remove(bullet)
+                break
+            
+        if not hit:
             remaining_meteorits.append(meteorit)
+
 
     meteorits = remaining_meteorits
 
@@ -99,11 +131,15 @@ while running:
 
     for meteorit in meteorits:
         pygame.draw.circle(screen, (255, 255, 255), (meteorit["x"], meteorit["y"]), meteorit_radius)
+        
+    for bullet in bullets:
+        pygame.draw.circle(screen, (139, 139, 139), (bullet["x"], bullet["y"]), bullet_radius)
+
     pygame.draw.rect(screen, (0, 0, 0), (spaceship_x, spaceship_y, spaceship_width, spaceship_height))
     
-
     #Счет
     score_text = font.render(f"Метеоритов отбито: {score}", True, (255, 255, 255))
+    
     #Жизни
     lives_text = font.render(f"Полная поломка через: {lives}", True, (255, 255, 255))
     screen.blit(score_text, (25, 25))
@@ -137,7 +173,6 @@ pygame.quit()
 
 
 #TODO:
-# 1. Cтрельба. при попадании в метеорит. метеорит пропадает.
 # 2. ограничение области летания корабля, чтобы не залетал за надписи
 # 3. Поставить на паузу
 # 4. Добавить задний фон и спрайты
