@@ -5,6 +5,9 @@ pygame.init()
 
 clock = pygame.time.Clock()
 
+#счет
+score = 0
+
 #начальное направление 
 direction = 'RIGHT'
 
@@ -12,7 +15,7 @@ direction = 'RIGHT'
 WIDTH = 1000
 HEIGHT = 800
 BLOCK = 20
-SPEED = 10
+SPEED = 7
 
 # отступы от краев экрана для сетки
 rl_edge = 80
@@ -40,26 +43,7 @@ snake_body = [
     [100, 100],
     [80, 100]
 ]
-food_event = pygame.USEREVENT +1 
-pygame.time.set_timer(food_event, 5000)
-current_food = []
 
-#периодическое появление еды
-def get_food():
-    if len(current_food) < 4:
-        food_pos = [
-            random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK), 
-            random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
-            ]
-        current_food.append(food_pos)
-
-<<<<<<< HEAD
-# тестовая еда
-# food_pos = [
-#     random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK),
-#     random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
-# ]
-=======
 #ивент на время для еды
 food_event = pygame.USEREVENT +1 
 pygame.time.set_timer(food_event, 4000)
@@ -69,11 +53,10 @@ current_food = []
 def get_food():
     if len(current_food) < 4:
         food_pos = [
-            random.randrange(FIELD_LEFT, FIELD_RIGHT, BLOCK), 
-            random.randrange(FIELD_UP, FIELD_DOWN, BLOCK)
+            random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
+            random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
             ]
         current_food.append(food_pos)
->>>>>>> 24064c83192da67a3c74d341685e836ee9cc7677
 
 # сетка
 def draw_grid():
@@ -95,6 +78,8 @@ running = True
 # пауза
 paused = False
 
+game_over = False
+
 while running:
 
     for event in pygame.event.get():
@@ -109,7 +94,7 @@ while running:
                 paused = not paused
         
 
-            if not paused:
+            if not paused and not game_over:
 
             #изменение направления змейки
                 if event.key == pygame.K_UP and direction != 'DOWN':
@@ -121,12 +106,7 @@ while running:
                 elif event.key == pygame.K_RIGHT and direction != 'LEFT':
                     direction = 'RIGHT'
 
-<<<<<<< HEAD
-                if event.type == pygame.USEREVENT:
-                    get_food()
-
-
-    if not paused:
+    if not paused and not game_over:
         # движение
         if direction == 'UP':
             snake_position[1] -= BLOCK
@@ -139,52 +119,8 @@ while running:
 
         elif direction == 'RIGHT':
             snake_position[0] += BLOCK
-
-        screen.fill((161,241,247))
-
-        # сетка
-        draw_grid()
-
-        # постоянная перезапись головы и удаление хвоста для иллюзии движения
-        snake_body.insert(0, list(snake_position))
-
-        # for food in current_food:
-        #     if food[0] == snake_position[0] and food[1] == snake_position[1]:
-        #         current_food.remove(food)
-                
-        #     else:
-        snake_body.pop()
-
-        # рендер каждой части змеюки
-        for one in snake_body:
-            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], BLOCK, BLOCK))
-
-        # проверка на столкновение с границами
-        if (snake_position[0] == FIELD_RIGHT - BLOCK and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
-            snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN - BLOCK and direction == "DOWN"):
-
-            running = False
-
-        for piece in current_food:
-            pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(current_food[0], current_food[1], BLOCK, BLOCK))
-
-        # # рендер тест еды
-        # pygame.draw.rect(screen, (255, 255, 255) , pygame.Rect(food_pos[0], food_pos[1], BLOCK, BLOCK))
-
-=======
-    if not paused:
-        # движение
-        if direction == 'UP':
-            snake_position[1] -= BLOCK
-
-        elif direction == 'DOWN':
-            snake_position[1] += BLOCK
-
-        elif direction == 'LEFT':
-            snake_position[0] -= BLOCK
-
-        elif direction == 'RIGHT':
-            snake_position[0] += BLOCK
+            
+        
 
         screen.fill((161,241,247))
 
@@ -201,6 +137,7 @@ while running:
             if food == snake_position:
                 current_food.remove(food)
                 ate = True
+                score += 5000
                 break
         
         #удаление хвоста
@@ -217,26 +154,47 @@ while running:
 
             #sound
 
-            crash_time = pygame.USEREVENT +2
-            pygame.time.set_timer(crash_time, 2500)
-            if event.type == crash_time 
+            # crash_time = pygame.USEREVENT +2
+            # pygame.time.set_timer(crash_time, 2500)
+            # if event.type == crash_time:
+            print('условие прошло')
             
-                running = False
+            game_over = True
 
         #рендер еды
         for piece in current_food:
             pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], BLOCK, BLOCK))
 
     #окно паузы
->>>>>>> 24064c83192da67a3c74d341685e836ee9cc7677
     if paused:
         # -text
         paused_text = pause_font.render("Пауза!", True, (82,87,91))
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
         screen.blit(paused_text, pause_rect)
 
+    if game_over:
+        game_over_text = pause_font.render(f"Игра закончена! Ваш счет: {score} \n Нажмите X для выхода", True, (82,87,91) )
+        go_rect = game_over_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+        screen.blit(game_over_text, go_rect)
+
+        for event in pygame.event.get():
+            if event.key == pygame.K_x:
+                running = False
+
     pygame.display.flip()
 
     clock.tick(SPEED)
 
 pygame.quit()
+
+# todo:
+# подсчет очков
+# окно геймовера
+# препятствия
+# мб ускорение на j с потерей длины если лень не будет
+
+# музыка базовая, ускорение
+# шрифт из файла
+# звук при паузе, геймовере, кратком столкновении со стеной
+
+# картинки и змейку градиентную если получится
