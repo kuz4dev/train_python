@@ -15,9 +15,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Леталки!")
 
 #широта корабля
-spaceship_width = 80
+spaceship_width = 110
 #высота корабля
-spaceship_height = 70
+spaceship_height = 100
 #широта положения корабля
 spaceship_x = WIDTH - 790
 #высота положения корабля
@@ -30,12 +30,12 @@ meteorit_x = WIDTH - 30
 #высота метеорита
 meteorit_y = HEIGHT
 #радиус метеорита
-meteorit_radius = 15
+meteorit_radius = 15 * 4
 #скорость метеорита
 meteorit_speed = 5
 
 #радиус снаряда
-bullet_radius = 20
+bullet_radius = 35
 #скорость снаряда
 bullet_speed = 7
 
@@ -56,23 +56,24 @@ paused = False
 
 running = True
 
-# background_image = pygame.image.load("assets/space_background.png").convert()
-# background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+background_image = pygame.image.load("assets/background.png").convert()
+background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
 spaceship_image = pygame.image.load("assets/spaceship.png").convert_alpha()
 spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
 
-# meteorit_image = pygame.image.load("assets/meteorit.jpg").convert_alpha()
-# meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius * 2, meteorit_radius * 2))
+meteorit_image = pygame.image.load("assets/meteorit.png").convert_alpha()
+meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteorit_radius))
 
 bullet_image = pygame.image.load("assets/bullet.png").convert_alpha()
-bullet_image = pygame.transform.scale(bullet_image, (bullet_radius * 2, bullet_radius * 2))
+bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
-# # catch_sound = pygame.mixer.Sound("assets/catch.wav")
+explosion_sound = pygame.mixer.Sound("assets/pause_track.mp3")
 # # miss_sound = pygame.mixer.Sound("assets/miss.wav")
 
-# pygame.mixer.music.load("assets/main_track.mp3")
-# pygame.mixer.music.play(-1)
+pygame.mixer.music.load("assets/main_track.mp3")
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1)
 
 
 while running:
@@ -83,12 +84,6 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
                 paused = not paused
-                # if paused == True:
-                #     pygame.mixer.music.load("assets/main_track.mp3")
-                #     pygame.mixer.music.play(-1)
-                # else:
-                #     pygame.mixer.music.load("assets/pause_track.mp3")
-                #     pygame.mixer.music.play(-1)
 
     if not paused:
         keys = pygame.key.get_pressed()
@@ -151,14 +146,13 @@ while running:
 
         meteorits = remaining_meteorits
 
-    screen.fill((200, 100, 200))
+    screen.blit(background_image, (0, 0))
 
     for meteorit in meteorits:
-        pygame.draw.circle(screen, (255, 255, 255), (meteorit["x"], meteorit["y"]), meteorit_radius)
+        screen.blit(meteorit_image, (meteorit["x"] - meteorit_radius, meteorit["y"] - meteorit_radius))
         
     for bullet in bullets:
         screen.blit(bullet_image, (bullet["x"] - bullet_radius, bullet["y"] - bullet_radius))
-# pygame.draw.circle(screen, (139, 139, 139), (bullet["x"], bullet["y"]), bullet_radius)
         
     screen.blit(spaceship_image, (spaceship_x, spaceship_y))
     

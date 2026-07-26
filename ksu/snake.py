@@ -33,7 +33,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Змейка")
 
 # -> font.font script b/ Climate Crisis/ impact
-pause_font = pygame.font.SysFont(None, 60)
+pause_font = pygame.font.SysFont(None, 40)
 
 #голова
 snake_position = [100, 160]
@@ -44,6 +44,10 @@ snake_body = [
     [80, 100]
 ]
 
+obstacles = [
+    
+]
+
 #ивент на время для еды
 food_event = pygame.USEREVENT +1 
 pygame.time.set_timer(food_event, 4000)
@@ -51,12 +55,13 @@ current_food = []
 
 #периодическое появление еды. не больше 4 за раз
 def get_food():
-    if len(current_food) < 4:
+    if len(current_food) < 5:
         food_pos = [
             random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
             random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
             ]
-        current_food.append(food_pos)
+        if food_pos not in current_food:
+            current_food.append(food_pos)
 
 # сетка
 def draw_grid():
@@ -94,7 +99,7 @@ while running:
                 paused = not paused
         
 
-            if not paused and not game_over:
+            if not paused:
 
             #изменение направления змейки
                 if event.key == pygame.K_UP and direction != 'DOWN':
@@ -106,7 +111,7 @@ while running:
                 elif event.key == pygame.K_RIGHT and direction != 'LEFT':
                     direction = 'RIGHT'
 
-    if not paused and not game_over:
+    if not paused:
         # движение
         if direction == 'UP':
             snake_position[1] -= BLOCK
@@ -126,6 +131,10 @@ while running:
 
         # сетка
         draw_grid()
+
+        ingame_score = pause_font.render(f"SCORE: {score}", True, (82,87,91))
+        ingame_score_rect = ingame_score.get_rect(center = (WIDTH // 2, 50))
+        screen.blit(ingame_score, ingame_score_rect)
 
         # постоянная перезапись головы и удаление хвоста для иллюзии движения
         snake_body.insert(0, list(snake_position))
@@ -157,9 +166,15 @@ while running:
             # crash_time = pygame.USEREVENT +2
             # pygame.time.set_timer(crash_time, 2500)
             # if event.type == crash_time:
-            print('условие прошло')
             
             game_over = True
+            running = False
+
+        # врезание змейки в себя
+        if snake_position in snake_body[1:]:
+            game_over = True
+            running = False
+            
 
         #рендер еды
         for piece in current_food:
@@ -172,24 +187,38 @@ while running:
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
         screen.blit(paused_text, pause_rect)
 
-    if game_over:
-        game_over_text = pause_font.render(f"Игра закончена! Ваш счет: {score} \n Нажмите X для выхода", True, (82,87,91) )
-        go_rect = game_over_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
-        screen.blit(game_over_text, go_rect)
-
-        for event in pygame.event.get():
-            if event.key == pygame.K_x:
-                running = False
-
     pygame.display.flip()
 
+    clock.tick(SPEED)
+
+while game_over:
+
+    screen.fill((161,241,247))
+
+    go_show_score = pause_font.render(f"Игра закончена! Ваш счет: {score}", True, (82,87,91))
+    go_score_rect = go_show_score.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+    screen.blit(go_show_score, go_score_rect)
+
+    exit_go_text = pause_font.render("Нажмите X для выхода", True, (82,87,91))
+    go_exit_rect = exit_go_text.get_rect(center = (WIDTH // 2, HEIGHT - 50) )
+    screen.blit(exit_go_text, go_exit_rect)
+
+    # game_over_text = pause_font.render(f"Игра закончена! Ваш счет: {score} \n Нажмите X для выхода", True, (82,87,91) )
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_x:
+                game_over = False
+
+    pygame.display.flip()
+    
     clock.tick(SPEED)
 
 pygame.quit()
 
 # todo:
-# подсчет очков
-# окно геймовера
+# подсчет очков +
+# окно геймовера +
 # препятствия
 # мб ускорение на j с потерей длины если лень не будет
 
