@@ -1,5 +1,6 @@
 import pygame
 import random
+from threading import Timer
 
 pygame.init()
 
@@ -15,7 +16,7 @@ direction = 'RIGHT'
 WIDTH = 1000
 HEIGHT = 800
 BLOCK = 20
-SPEED = 7
+speed = 7
 
 # отступы от краев экрана для сетки
 rl_edge = 80
@@ -50,8 +51,15 @@ obstacles = [
 
 #ивент на время для еды
 food_event = pygame.USEREVENT +1 
-pygame.time.set_timer(food_event, 4000)
+pygame.time.set_timer(food_event, 2500)
 current_food = []
+
+SPEED_BOOST = 5
+boost_start = 0
+
+boost_event = pygame.USEREVENT +2 
+pygame.time.set_timer(boost_event, 35000)
+current_boost = []
 
 #периодическое появление еды. не больше 4 за раз
 def get_food():
@@ -60,8 +68,18 @@ def get_food():
             random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
             random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
             ]
-        if food_pos not in current_food:
+        if food_pos not in (snake_body or current_boost or current_food):
             current_food.append(food_pos)
+
+def boost_spawn():
+    if len(current_boost) < 2:
+        boost_pos = [
+            random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
+            random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
+        ]
+        if boost_pos not in (snake_body or current_boost or current_food):
+            current_boost.append(boost_pos)
+
 
 # сетка
 def draw_grid():
@@ -77,13 +95,39 @@ def draw_grid():
         pygame.draw.line(screen, (161,206,247), (x, upper_edge), (x, HEIGHT - down_edge), 2)
         x += BLOCK
 
+def stop_boost(arg):
+    arg -= SPEED_BOOST
 
-running = True
+#сама игра
+running = False
 
 # пауза
 paused = False
 
+# окно конца игры
 game_over = False
+
+# окно начала
+start_screen = True
+
+
+while start_screen:
+    screen.fill((161,241,247))
+    
+    opening_text = pause_font.render(f"Нажмите пробел для начала игры", True, (82,87,91))
+    opening_text_rect = opening_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+    screen.blit(opening_text, opening_text_rect)
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                start_screen = False
+                running = True
+
+    pygame.display.flip()
+    
+    clock.tick(speed)
+
 
 while running:
 
@@ -94,6 +138,9 @@ while running:
         if event.type == food_event and not paused:
             get_food() 
 
+        if event.type == boost_event and not paused:
+            boost_spawn()
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused
@@ -102,13 +149,13 @@ while running:
             if not paused:
 
             #изменение направления змейки
-                if event.key == pygame.K_UP and direction != 'DOWN':
+                if event.key == pygame.K_w and direction != 'DOWN':
                     direction = 'UP'
-                elif event.key == pygame.K_DOWN and direction != 'UP':
+                elif event.key == pygame.K_s and direction != 'UP':
                     direction = 'DOWN'
-                elif event.key == pygame.K_LEFT and direction != 'RIGHT':
+                elif event.key == pygame.K_a and direction != 'RIGHT':
                     direction = 'LEFT'
-                elif event.key == pygame.K_RIGHT and direction != 'LEFT':
+                elif event.key == pygame.K_d and direction != 'LEFT':
                     direction = 'RIGHT'
 
     if not paused:
@@ -157,6 +204,13 @@ while running:
         for one in snake_body:
             pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], BLOCK, BLOCK))
 
+        #рендер еды
+        for piece in current_food:
+            pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], BLOCK, BLOCK))
+
+        for boost in current_boost:
+            pygame.draw.rect(screen, (172,253,139) , pygame.Rect(boost[0], boost[1], BLOCK, BLOCK))
+
         # проверка на столкновение с границами
         if (snake_position[0] == FIELD_RIGHT - BLOCK and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
             snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN - BLOCK and direction == "DOWN"):
@@ -174,11 +228,22 @@ while running:
         if snake_position in snake_body[1:]:
             game_over = True
             running = False
+
+        for boost in current_boost:
+            if boost == snake_position:
+                current_boost.remove(boost)
+                boost_start = pygame.time.get_ticks
+                speed += SPEED_BOOST
+
+                Timer(10, stop_boost, speed).start()
+
+        # if int(boost_start) >= 10000:
+        #     speed -= SPEED_BOOST
+
+
+
             
 
-        #рендер еды
-        for piece in current_food:
-            pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], BLOCK, BLOCK))
 
     #окно паузы
     if paused:
@@ -189,8 +254,10 @@ while running:
 
     pygame.display.flip()
 
-    clock.tick(SPEED)
+    clock.tick(speed)
 
+
+# окно конца игры
 while game_over:
 
     screen.fill((161,241,247))
@@ -203,16 +270,15 @@ while game_over:
     go_exit_rect = exit_go_text.get_rect(center = (WIDTH // 2, HEIGHT - 50) )
     screen.blit(exit_go_text, go_exit_rect)
 
-    # game_over_text = pause_font.render(f"Игра закончена! Ваш счет: {score} \n Нажмите X для выхода", True, (82,87,91) )
-
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
                 game_over = False
+                
 
     pygame.display.flip()
     
-    clock.tick(SPEED)
+    clock.tick(speed)
 
 pygame.quit()
 
