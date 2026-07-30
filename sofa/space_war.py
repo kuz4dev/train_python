@@ -14,6 +14,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #название игры
 pygame.display.set_caption("Леталки!")
 
+
+#широта корабля
+confines_width = 800
+#высота корабля
+confines_height = 500
+#широта положения корабля
+confines_x = WIDTH
+#высота положения корабля
+confines_y = HEIGHT // 2
+
 #широта корабля
 spaceship_width = 110
 #высота корабля
@@ -35,7 +45,7 @@ meteorit_radius = 15 * 4
 meteorit_speed = 5
 
 #радиус снаряда
-bullet_radius = 35
+bullet_radius = 45
 #скорость снаряда
 bullet_speed = 7
 
@@ -50,7 +60,7 @@ score = 0
 #жизни
 lives = 3
 
-font = pygame.font.SysFont(None, 30)
+font = pygame.font.SysFont(None, 23)
 
 paused = False
 
@@ -67,9 +77,6 @@ meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteor
 
 bullet_image = pygame.image.load("assets/bullet.png").convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
-
-explosion_sound = pygame.mixer.Sound("assets/pause_track.mp3")
-# # miss_sound = pygame.mixer.Sound("assets/miss.wav")
 
 pygame.mixer.music.load("assets/main_track.mp3")
 pygame.mixer.music.set_volume(0.15)
@@ -93,9 +100,10 @@ while running:
             spaceship_y -= spaceship_speed
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             spaceship_y += spaceship_speed
-
-        if spaceship_y < 0:
-            spaceship_y = 0
+            
+            
+        if spaceship_y < spaceship_height / 2:
+            spaceship_y = spaceship_height / 2
         if spaceship_y > HEIGHT - spaceship_height:
             spaceship_y = HEIGHT - spaceship_height
 
@@ -105,7 +113,7 @@ while running:
         if spawn_timer >= spawn_interval:
             spawn_timer = 0
             meteorit_y = random.randint(150, 600)
-            meteorits.append({"x": meteorit_x, "y": meteorit_y})
+            meteorits.append({"x": meteorit_x + 80, "y": meteorit_y})
 
 
         for meteorit in meteorits:
@@ -181,17 +189,23 @@ while running:
 pygame.mixer.music.stop()
 
 game_over_text = font.render("Игра окончена!", True, (0, 0, 0))
+game_over_X = font.render("Нажмите X, чтобы закрыть игру.", True, (0, 0, 0))
 
 showing_game_over = True
 
 #пока показывает экран проигрыша
 while showing_game_over:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_x:
+                showing_game_over = False
+        elif event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:
+                showing_game_over = False
 
     screen.fill((130, 206, 190))
     screen.blit(game_over_text, (WIDTH // 2 - 100, HEIGHT // 2 - 20))
+    screen.blit(game_over_X, (WIDTH // 2 - 100, HEIGHT // 2 - 20 + 30))
     pygame.display.flip()
     clock.tick(60)
 
@@ -200,6 +214,5 @@ pygame.quit()
 
 #TODO:
 # 2. ограничение области летания корабля, чтобы не залетал за надписи
-# 4. Добавить задний фон
 # 5. Добавить звуки
 # 6. добавить комментарии

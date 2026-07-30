@@ -1,6 +1,5 @@
 import pygame
 import random
-from threading import Timer
 
 pygame.init()
 
@@ -28,6 +27,8 @@ FIELD_LEFT = rl_edge
 FIELD_RIGHT = WIDTH - rl_edge
 FIELD_UP = upper_edge
 FIELD_DOWN = HEIGHT - down_edge
+
+boost_end_time = 0
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -71,6 +72,7 @@ def get_food():
         if food_pos not in (snake_body or current_boost or current_food):
             current_food.append(food_pos)
 
+# появление еды
 def boost_spawn():
     if len(current_boost) < 2:
         boost_pos = [
@@ -94,9 +96,6 @@ def draw_grid():
     while x <= WIDTH - rl_edge:
         pygame.draw.line(screen, (161,206,247), (x, upper_edge), (x, HEIGHT - down_edge), 2)
         x += BLOCK
-
-def stop_boost(arg):
-    arg -= SPEED_BOOST
 
 #сама игра
 running = False
@@ -172,14 +171,17 @@ while running:
         elif direction == 'RIGHT':
             snake_position[0] += BLOCK
             
-        
+               
+        if boost_end_time and pygame.time.get_ticks() >= boost_end_time:
+            speed -= SPEED_BOOST
+            boost_end_time = 0
 
         screen.fill((161,241,247))
 
         # сетка
         draw_grid()
 
-        ingame_score = pause_font.render(f"SCORE: {score}", True, (82,87,91))
+        ingame_score = pause_font.render(f"SCORE: {score}, speed: {speed}", True, (82,87,91))
         ingame_score_rect = ingame_score.get_rect(center = (WIDTH // 2, 50))
         screen.blit(ingame_score, ingame_score_rect)
 
@@ -229,19 +231,13 @@ while running:
             game_over = True
             running = False
 
+        # врезание в змейку и ускорение-возвращение
         for boost in current_boost:
             if boost == snake_position:
                 current_boost.remove(boost)
-                boost_start = pygame.time.get_ticks
                 speed += SPEED_BOOST
 
-                Timer(10, stop_boost, speed).start()
-
-        # if int(boost_start) >= 10000:
-        #     speed -= SPEED_BOOST
-
-
-
+                boost_end_time = pygame.time.get_ticks() + 10000
             
 
 
@@ -283,10 +279,8 @@ while game_over:
 pygame.quit()
 
 # todo:
-# подсчет очков +
-# окно геймовера +
-# препятствия
-# мб ускорение на j с потерей длины если лень не будет
+# препятствия сгруппированные через изменение рандомной координаты относительно другого блока
+# мб ускорение на j с потерей 1 длины если лень не будет
 
 # музыка базовая, ускорение
 # шрифт из файла
