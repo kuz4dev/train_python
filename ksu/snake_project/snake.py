@@ -34,8 +34,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
+score_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\DigitalNumbers-Regular.ttf', 30)
+
 # -> font.font script b/ Climate Crisis/ impact
-pause_font = pygame.font.SysFont(None, 40)
+pause_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\en-us.ttf', 25)
 
 #голова
 snake_position = [100, 160]
@@ -59,7 +61,7 @@ SPEED_BOOST = 5
 boost_start = 0
 
 boost_event = pygame.USEREVENT +2 
-pygame.time.set_timer(boost_event, 35000)
+pygame.time.set_timer(boost_event, 45000)
 current_boost = []
 
 #периодическое появление еды. не больше 4 за раз
@@ -74,7 +76,7 @@ def get_food():
 
 # появление еды
 def boost_spawn():
-    if len(current_boost) < 2:
+    if len(current_boost) < 1:
         boost_pos = [
             random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
             random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
@@ -181,7 +183,7 @@ while running:
         # сетка
         draw_grid()
 
-        ingame_score = pause_font.render(f"SCORE: {score}, speed: {speed}", True, (82,87,91))
+        ingame_score = score_font.render(f"SCORE: {str(score).zfill(15)}", True, (82,87,91))
         ingame_score_rect = ingame_score.get_rect(center = (WIDTH // 2, 50))
         screen.blit(ingame_score, ingame_score_rect)
 
@@ -280,7 +282,6 @@ pygame.quit()
 
 # todo:
 # препятствия сгруппированные через изменение рандомной координаты относительно другого блока
-# мб ускорение на j с потерей 1 длины если лень не будет
 
 # музыка базовая, ускорение
 # шрифт из файла
