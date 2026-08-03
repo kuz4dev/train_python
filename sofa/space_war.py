@@ -1,9 +1,15 @@
 import pygame
 import random
+import os
 
 pygame.init()
 
 clock = pygame.time.Clock()
+
+# Папка, где лежит сам скрипт
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Папка с ассетами
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
 #ширина окна
 WIDTH = 800
@@ -45,7 +51,7 @@ meteorit_radius = 15 * 4
 meteorit_speed = 5
 
 #радиус снаряда
-bullet_radius = 45
+bullet_radius = 25
 #скорость снаряда
 bullet_speed = 7
 
@@ -63,22 +69,22 @@ lives = 3
 font = pygame.font.SysFont(None, 23)
 
 paused = False
-
+music = True
 running = True
 
-background_image = pygame.image.load("assets/background.png").convert()
+background_image = pygame.image.load(os.path.join(ASSETS_DIR, "background.png")).convert()
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
-spaceship_image = pygame.image.load("assets/spaceship.png").convert_alpha()
+spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
 spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
 
-meteorit_image = pygame.image.load("assets/meteorit.png").convert_alpha()
+meteorit_image = pygame.image.load(os.path.join(ASSETS_DIR, "meteorit.png")).convert_alpha()
 meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteorit_radius))
 
-bullet_image = pygame.image.load("assets/bullet.png").convert_alpha()
+bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
-pygame.mixer.music.load("assets/main_track.mp3")
+pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
 pygame.mixer.music.set_volume(0.15)
 pygame.mixer.music.play(-1)
 
@@ -90,11 +96,21 @@ while running:
                 bullets.append({"x": spaceship_x + spaceship_width, "y": spaceship_y + (spaceship_height // 2)})
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
+                if paused:
+                    pygame.mixer.music.unpause()
+                else:
+                    pygame.mixer.music.pause()
                 paused = not paused
-
+            if event.key == pygame.K_c:
+                music = not music
+                if music:
+                    pygame.mixer.music.unpause()
+                else:
+                    pygame.mixer.music.pause()
+                
     if not paused:
         keys = pygame.key.get_pressed()
-
+        
         # Логика передвижения корабля
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             spaceship_y -= spaceship_speed
@@ -139,7 +155,7 @@ while running:
                 hit = True
 
             for bullet in bullets:
-                bullet_rect = pygame.Rect(bullet["x"] - bullet_radius, bullet["y"] - bullet_radius, bullet_radius * 2, bullet_radius * 2)
+                bullet_rect = pygame.Rect(bullet["x"] - bullet_radius // 2, bullet["y"] - bullet_radius // 2, bullet_radius, bullet_radius)
                 
                 if bullet_rect.colliderect(meteorit_rect):
                     hit = True
@@ -160,7 +176,7 @@ while running:
         screen.blit(meteorit_image, (meteorit["x"] - meteorit_radius, meteorit["y"] - meteorit_radius))
         
     for bullet in bullets:
-        screen.blit(bullet_image, (bullet["x"] - bullet_radius, bullet["y"] - bullet_radius))
+        screen.blit(bullet_image, (bullet["x"] - bullet_radius // 2, bullet["y"] - bullet_radius // 2))
         
     screen.blit(spaceship_image, (spaceship_x, spaceship_y))
     
@@ -174,8 +190,11 @@ while running:
 
     if paused:
         paused_text = font.render("Пауза!", True, (255, 255, 255))
+        control_text = font.render("WS - управление, E - выстрел, TAB - пауза/продолжить, C - включить/выключить музыку", True, (255, 255, 255))
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+        control_rect = control_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 - 40))
         screen.blit(paused_text, pause_rect)
+        screen.blit(control_text, control_rect)
 
     pygame.display.flip()
 
@@ -213,6 +232,6 @@ pygame.quit()
 
 
 #TODO:
-# 2. ограничение области летания корабля, чтобы не залетал за надписи
-# 5. Добавить звуки
-# 6. добавить комментарии
+# 1. Начальный экран
+# 2. окно проигрыша
+# 3. добавить комментарии

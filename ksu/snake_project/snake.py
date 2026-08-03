@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 
 pygame.init()
 
@@ -10,6 +11,10 @@ score = 0
 
 #начальное направление 
 direction = 'RIGHT'
+
+# папки - пути
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, 'snake_assets')
 
 # размеры экрана и блока
 WIDTH = 1000
@@ -34,10 +39,14 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
-score_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\DigitalNumbers-Regular.ttf', 30)
+# score_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\DigitalNumbers-Regular.ttf', 30)
 
-# -> font.font script b/ Climate Crisis/ impact
-pause_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\en-us.ttf', 25)
+# # -> font.font script b/ Climate Crisis/ impact
+# pause_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\en-us.ttf', 25)
+
+score_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
+
+pause_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'en-us.ttf'), 25)
 
 #голова
 snake_position = [100, 160]
@@ -46,10 +55,6 @@ snake_position = [100, 160]
 snake_body = [
     [100, 100],
     [80, 100]
-]
-
-obstacles = [
-    
 ]
 
 #ивент на время для еды
@@ -63,6 +68,31 @@ boost_start = 0
 boost_event = pygame.USEREVENT +2 
 pygame.time.set_timer(boost_event, 45000)
 current_boost = []
+
+obstacles = []
+current_obstacles = []
+
+obstacle_event = pygame.USEREVENT + 3
+pygame.time.set_timer(obstacle_event, 25000)
+
+# препятствие
+def get_obstacle():
+    if len(current_obstacles) < 1:
+        base_obstacle_block = [
+            random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
+            random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
+            ]
+        
+        obstacles.append([ [base_obstacle_block[0] - 20, base_obstacle_block[1]], base_obstacle_block[0] ], [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]] ],
+        [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20] ],
+        [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20], 
+        [base_obstacle_block[0] + 20, base_obstacle_block[1] - 20] ], [base_obstacle_block, [base_obstacle_block[0] - 20, base_obstacle_block[1]], [base_obstacle_block[0] +20, base_obstacle_block[1]] ])
+
+        figure = random.choice(obstacles)
+
+        if 
+        current_obstacles.append(figure)
+    
 
 #периодическое появление еды. не больше 4 за раз
 def get_food():
