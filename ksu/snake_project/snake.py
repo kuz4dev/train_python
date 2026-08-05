@@ -34,15 +34,11 @@ FIELD_UP = upper_edge
 FIELD_DOWN = HEIGHT - down_edge
 
 boost_end_time = 0
+obstacle_lifetime = 0
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
-
-# score_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\DigitalNumbers-Regular.ttf', 30)
-
-# # -> font.font script b/ Climate Crisis/ impact
-# pause_font = pygame.font.Font('train_python\ksu\snake_project\snake_assets\en-us.ttf', 25)
 
 score_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
 
@@ -77,21 +73,22 @@ pygame.time.set_timer(obstacle_event, 25000)
 
 # препятствие
 def get_obstacle():
-    if len(current_obstacles) < 1:
+    if len(current_obstacles) < 4:
+
         base_obstacle_block = [
-            random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
-            random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
+            random.randrange(FIELD_LEFT + 4 * BLOCK, FIELD_RIGHT - 4 * BLOCK, BLOCK), 
+            random.randrange(FIELD_UP + 4 * BLOCK, FIELD_DOWN - 4 * BLOCK, BLOCK)
             ]
         
-        obstacles.append([ [base_obstacle_block[0] - 20, base_obstacle_block[1]], base_obstacle_block[0] ], [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]] ],
+        obstacles_list = [ [ [base_obstacle_block[0] - 20, base_obstacle_block[1]], base_obstacle_block ], [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]] ],
         [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20] ],
         [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20], 
-        [base_obstacle_block[0] + 20, base_obstacle_block[1] - 20] ], [base_obstacle_block, [base_obstacle_block[0] - 20, base_obstacle_block[1]], [base_obstacle_block[0] +20, base_obstacle_block[1]] ])
+        [base_obstacle_block[0] + 20, base_obstacle_block[1] - 20] ], [base_obstacle_block, [base_obstacle_block[0] - 20, base_obstacle_block[1]], [base_obstacle_block[0] +20, base_obstacle_block[1]] ] ]
 
-        figure = random.choice(obstacles)
+        figure = random.choice(obstacles_list)
 
-        if 
-        current_obstacles.append(figure)
+        if (figure not in (snake_body and current_boost and current_food)) and next_pos not in figure:
+            current_obstacles.append(figure)
     
 
 #периодическое появление еды. не больше 4 за раз
@@ -101,17 +98,17 @@ def get_food():
             random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
             random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
             ]
-        if food_pos not in (snake_body or current_boost or current_food):
+        if food_pos not in (snake_body and current_boost and current_food and current_obstacles) and food_pos != next_pos:
             current_food.append(food_pos)
 
 # появление еды
 def boost_spawn():
-    if len(current_boost) < 1:
+    if len(current_boost) < 2:
         boost_pos = [
             random.randrange(FIELD_LEFT + 2 * BLOCK, FIELD_RIGHT - 2 * BLOCK, BLOCK), 
             random.randrange(FIELD_UP + 2 * BLOCK, FIELD_DOWN - 2 * BLOCK, BLOCK)
         ]
-        if boost_pos not in (snake_body or current_boost or current_food):
+        if (boost_pos not in (snake_body and current_boost and current_food and current_obstacles)) and next_pos != boost_pos : 
             current_boost.append(boost_pos)
 
 
@@ -172,6 +169,10 @@ while running:
         if event.type == boost_event and not paused:
             boost_spawn()
 
+        if event.type == obstacle_event and not paused:
+            get_obstacle()
+            obstacle_lifetime = pygame.time.get_ticks() + 20000
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused
@@ -202,11 +203,25 @@ while running:
 
         elif direction == 'RIGHT':
             snake_position[0] += BLOCK
+
+        if direction == 'UP':
+            next_pos = [snake_position[0], snake_position[1] - BLOCK]
+        elif direction == 'DOWN':
+            next_pos = [snake_position[0], snake_position[1] + BLOCK]
+        elif direction == 'LEFT':
+            next_pos = [snake_position[0] - BLOCK, snake_position[1]]
+        elif direction == 'RIGHT':
+            next_pos = [snake_position[0] + BLOCK, snake_position[1]]
             
                
         if boost_end_time and pygame.time.get_ticks() >= boost_end_time:
             speed -= SPEED_BOOST
             boost_end_time = 0
+
+        if (obstacle_lifetime and pygame.time.get_ticks() >= obstacle_lifetime) and len(current_obstacles) == 4:
+            print("функция заработала")
+            current_obstacles.pop(0)
+            obstacle_lifetime = 0
 
         screen.fill((161,241,247))
 
@@ -245,6 +260,16 @@ while running:
         for boost in current_boost:
             pygame.draw.rect(screen, (172,253,139) , pygame.Rect(boost[0], boost[1], BLOCK, BLOCK))
 
+        for obs in current_obstacles:
+            for block in obs:
+                pygame.draw.rect(screen, (32,62,15), pygame.Rect(block[0], block[1], BLOCK, BLOCK))
+
+        for obs in current_obstacles:
+            for block in obs:
+                if next_pos == block:
+                    game_over = True
+                    running = False
+
         # проверка на столкновение с границами
         if (snake_position[0] == FIELD_RIGHT - BLOCK and direction == "RIGHT") or (snake_position[0] == FIELD_LEFT and direction == "LEFT") or (
             snake_position[1] == FIELD_UP and direction == "UP") or (snake_position[1] == FIELD_DOWN - BLOCK and direction == "DOWN"):
@@ -270,6 +295,7 @@ while running:
                 speed += SPEED_BOOST
 
                 boost_end_time = pygame.time.get_ticks() + 10000
+                break
             
 
 
@@ -311,7 +337,7 @@ while game_over:
 pygame.quit()
 
 # todo:
-# препятствия сгруппированные через изменение рандомной координаты относительно другого блока
+# таймер на удаление препятствий и проверка на столкновение с ними
 
 # музыка базовая, ускорение
 # шрифт из файла
