@@ -66,21 +66,14 @@ score = 0
 #жизни
 lives = 3
 
-font_path = pygame.font.Font(os.path.join(ASSETS_DIR,"pixelmplusbold.ttf"), 15)
+font = pygame.font.SysFont(None, 23)
 
 paused = False
 music = True
-running = False
-initial_window = True
+running = True
 
 background_image = pygame.image.load(os.path.join(ASSETS_DIR, "background.png")).convert()
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-
-start_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "start_background.jpg")).convert()
-start_background_image = pygame.transform.scale(start_background_image, (WIDTH, HEIGHT))
-
-over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
-over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
 
 spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
 spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
@@ -95,24 +88,8 @@ pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
 pygame.mixer.music.set_volume(0.15)
 pygame.mixer.music.play(-1)
 
-while initial_window:
-    screen.blit(start_background_image, (0, 0))
-    
-    opening_text = font_path.render(f"R - для начала игры", True, (255,242,97))
-    opening_text_rect = opening_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 + 150))
-    screen.blit(opening_text, opening_text_rect)
-
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                initial_window = False
-                running = True
-
-    pygame.display.flip()
-
 
 while running:
-    keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
@@ -140,7 +117,8 @@ while running:
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             spaceship_y += spaceship_speed
             
-        if spaceship_y < 42:
+            
+        if spaceship_y < spaceship_height / 2:
             spaceship_y = spaceship_height / 2
         if spaceship_y > HEIGHT - spaceship_height:
             spaceship_y = HEIGHT - spaceship_height
@@ -203,23 +181,20 @@ while running:
     screen.blit(spaceship_image, (spaceship_x, spaceship_y))
     
     #Счет
-    score_text = font_path.render(f"Метеоритов отбито: {score}", True, (255, 255, 255))
+    score_text = font.render(f"Метеоритов отбито: {score}", True, (255, 255, 255))
     
     #Жизни
-    lives_text = font_path.render(f"Полная поломка через: {lives}", True, (255, 255, 255))
+    lives_text = font.render(f"Полная поломка через: {lives}", True, (255, 255, 255))
     screen.blit(score_text, (25, 25))
-    screen.blit(lives_text, (25, 50))
+    screen.blit(lives_text, (WIDTH - 300, 25))
 
     if paused:
-        paused_text = font_path.render("Пауза!", True, (255, 255, 255))
-        control_text = font_path.render("WS - управление, E - выстрел", True, (255, 255, 255))
-        control2_text = font_path.render("TAB - пауза/продолжить, C - вкл/выкл музыку", True, (255, 255, 255))
+        paused_text = font.render("Пауза!", True, (255, 255, 255))
+        control_text = font.render("WS - управление, E - выстрел, TAB - пауза/продолжить, C - включить/выключить музыку", True, (255, 255, 255))
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
-        control_rect = control_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 + 40))
-        control2_rect = control_text.get_rect(center = (WIDTH // 2 - 90, HEIGHT // 2 + 60))
+        control_rect = control_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 - 40))
         screen.blit(paused_text, pause_rect)
         screen.blit(control_text, control_rect)
-        screen.blit(control2_text, control2_rect)
 
     pygame.display.flip()
 
@@ -232,8 +207,8 @@ while running:
 
 pygame.mixer.music.stop()
 
-game_over_text = font_path.render("Игра окончена!", True, (255, 255, 255))
-game_over_X = font_path.render("Нажмите X, чтобы закрыть игру.", True, (255, 255, 255))
+game_over_text = font.render("Игра окончена!", True, (0, 0, 0))
+game_over_X = font.render("Нажмите X, чтобы закрыть игру.", True, (0, 0, 0))
 
 showing_game_over = True
 
@@ -247,9 +222,9 @@ while showing_game_over:
             if event.type == pygame.QUIT:
                 showing_game_over = False
 
-    screen.blit(over_background_image, (0, 0))
-    screen.blit(game_over_text, (WIDTH // 2 - 200, HEIGHT // 2))
-    screen.blit(game_over_X, (WIDTH // 2 - 200, HEIGHT // 2 + 30))
+    screen.fill((130, 206, 190))
+    screen.blit(game_over_text, (WIDTH // 2 - 100, HEIGHT // 2 - 20))
+    screen.blit(game_over_X, (WIDTH // 2 - 100, HEIGHT // 2 - 20 + 30))
     pygame.display.flip()
     clock.tick(60)
 
@@ -257,5 +232,6 @@ pygame.quit()
 
 
 #TODO:
-# 1. Когда летит вверх (запредел) немного эпилепсия
+# 1. Начальный экран
+# 2. окно проигрыша
 # 3. добавить комментарии

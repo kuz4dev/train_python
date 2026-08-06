@@ -16,26 +16,6 @@ direction = 'RIGHT'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, 'snake_assets')
 
-# размеры экрана и блока
-WIDTH = 1000
-HEIGHT = 800
-BLOCK = 20
-speed = 7
-
-# отступы от краев экрана для сетки
-rl_edge = 80
-upper_edge = 100
-down_edge = 80
-
-# координаты сетки
-FIELD_LEFT = rl_edge
-FIELD_RIGHT = WIDTH - rl_edge
-FIELD_UP = upper_edge
-FIELD_DOWN = HEIGHT - down_edge
-
-boost_end_time = 0
-obstacle_lifetime = 0
-
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("Змейка")
@@ -44,29 +24,12 @@ score_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'DigitalNumbers-Regular.t
 
 pause_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'en-us.ttf'), 25)
 
-#голова
-snake_position = [100, 160]
-
-#все части змейки
-snake_body = [
-    [100, 100],
-    [80, 100]
-]
-
 #ивент на время для еды
 food_event = pygame.USEREVENT +1 
 pygame.time.set_timer(food_event, 2500)
-current_food = []
-
-SPEED_BOOST = 5
-boost_start = 0
 
 boost_event = pygame.USEREVENT +2 
 pygame.time.set_timer(boost_event, 45000)
-current_boost = []
-
-obstacles = []
-current_obstacles = []
 
 obstacle_event = pygame.USEREVENT + 3
 pygame.time.set_timer(obstacle_event, 25000)
@@ -337,7 +300,6 @@ while game_over:
 pygame.quit()
 
 # todo:
-# таймер на удаление препятствий и проверка на столкновение с ними
 
 # музыка базовая, ускорение
 # шрифт из файла
