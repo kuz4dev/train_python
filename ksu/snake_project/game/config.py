@@ -4,6 +4,9 @@ HEIGHT = 800
 BLOCK = 20
 speed = 7
 
+#счет
+score = 0
+
 # отступы от краев экрана для сетки
 rl_edge = 80
 upper_edge = 100

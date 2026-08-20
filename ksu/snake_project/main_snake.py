@@ -1,14 +1,12 @@
 import pygame
 import random
 import os
-import config as cfg
+
+from game import config as cfg
 
 pygame.init()
 
 clock = pygame.time.Clock()
-
-#счет
-score = 0
 
 # папки - пути
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -141,7 +139,7 @@ while running:
 
             if not paused:
 
-            #изменение направления змейки
+                #изменение направления змейки
                 if event.key == pygame.K_w and cfg.direction != 'DOWN':
                     cfg.direction = 'UP'
                 elif event.key == pygame.K_s and cfg.direction != 'UP':
@@ -189,7 +187,7 @@ while running:
         # сетка
         draw_grid()
 
-        ingame_score = score_font.render(f"SCORE: {str(score).zfill(15)}", True, (82,87,91))
+        ingame_score = score_font.render(f"SCORE: {str(cfg.score).zfill(15)}", True, (82,87,91))
         ingame_score_rect = ingame_score.get_rect(center = (cfg.WIDTH // 2, 50))
         screen.blit(ingame_score, ingame_score_rect)
 
@@ -203,7 +201,7 @@ while running:
             if food == cfg.snake_position:
                 cfg.current_food.remove(food)
                 ate = True
-                score += 5000
+                cfg.score += 5000
                 break
         
         #удаление хвоста
@@ -277,7 +275,7 @@ while game_over:
 
     screen.fill((161,241,247))
 
-    go_show_score = pause_font.render(f"Игра закончена! Ваш счет: {score}", True, (82,87,91))
+    go_show_score = pause_font.render(f"Игра закончена! Ваш счет: {cfg.score}", True, (82,87,91))
     go_score_rect = go_show_score.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))
     screen.blit(go_show_score, go_score_rect)
 

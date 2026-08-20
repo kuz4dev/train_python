@@ -2,6 +2,8 @@ import pygame
 import random
 import os
 
+# from config import BASE_DIR, ASSETS_DIR, WIDTH, HEIGHT, screen, spaceship_width, spaceship_height, spaceship_x, spaceship_y, spaceship_speed, meteorit_x, meteorit_y, meteorit_radius, meteorit_speed, bullet_radius, bullet_speed, bullets, meteorits, spawn_timer, spawn_interval, score, lives, font, paused, music, running
+
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -66,14 +68,23 @@ score = 0
 #жизни
 lives = 3
 
-font = pygame.font.SysFont(None, 23)
+font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 14)
+game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 27)
 
 paused = False
-music = True
-running = True
+music = False
+running = False
+initial_window = True
+
+
+start_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "start_background.jpg")).convert()
+start_background_image = pygame.transform.scale(start_background_image, (WIDTH, HEIGHT))
 
 background_image = pygame.image.load(os.path.join(ASSETS_DIR, "background.png")).convert()
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
+over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
 
 spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
 spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
@@ -88,8 +99,23 @@ pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
 pygame.mixer.music.set_volume(0.15)
 pygame.mixer.music.play(-1)
 
+while initial_window:
+    screen.blit(start_background_image, (0, 0))
+    
+    opening_text = game_over.render(f"R - для начала игры", True, (255,242,97))
+    opening_text_rect = opening_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
+    screen.blit(opening_text, opening_text_rect)
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                initial_window = False
+                running = True
+
+    pygame.display.flip()
 
 while running:
+    music = True
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
@@ -207,8 +233,8 @@ while running:
 
 pygame.mixer.music.stop()
 
-game_over_text = font.render("Игра окончена!", True, (0, 0, 0))
-game_over_X = font.render("Нажмите X, чтобы закрыть игру.", True, (0, 0, 0))
+game_over_text = game_over.render("Игра окончена!", True, (255, 255, 255))
+game_over_X = game_over.render("Нажмите X, чтобы закрыть игру.", True, (255, 255, 255))
 
 showing_game_over = True
 
@@ -222,9 +248,9 @@ while showing_game_over:
             if event.type == pygame.QUIT:
                 showing_game_over = False
 
-    screen.fill((130, 206, 190))
-    screen.blit(game_over_text, (WIDTH // 2 - 100, HEIGHT // 2 - 20))
-    screen.blit(game_over_X, (WIDTH // 2 - 100, HEIGHT // 2 - 20 + 30))
+    screen.blit(over_background_image, (0, 0))
+    screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2 - game_over_text.get_height() // 2))
+    screen.blit(game_over_X, (WIDTH // 2 - game_over_X.get_width() // 2, HEIGHT - game_over_X.get_height() // 2 - 30))
     pygame.display.flip()
     clock.tick(60)
 
@@ -233,5 +259,5 @@ pygame.quit()
 
 #TODO:
 # 1. Начальный экран
-# 2. окно проигрыша
+# 2. окно проигрыша/завершение игры
 # 3. добавить комментарии
