@@ -68,8 +68,9 @@ score = 0
 #жизни
 lives = 3
 
-font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 14)
-game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 27)
+#
+font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
+game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 25)
 
 paused = False
 music = False
@@ -97,7 +98,9 @@ bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radiu
 
 pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
 pygame.mixer.music.set_volume(0.15)
-pygame.mixer.music.play(-1)
+
+pygame.mixer.music.load(os.path.join(ASSETS_DIR, "over_track.mp3"))
+pygame.mixer.music.set_volume(0.15)
 
 while initial_window:
     screen.blit(start_background_image, (0, 0))
@@ -115,7 +118,6 @@ while initial_window:
     pygame.display.flip()
 
 while running:
-    music = True
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
@@ -137,13 +139,13 @@ while running:
     if not paused:
         keys = pygame.key.get_pressed()
         
-        # Логика передвижения корабля
+        #Передвижение корабля
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             spaceship_y -= spaceship_speed
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             spaceship_y += spaceship_speed
-            
-            
+        
+        #ограничение корабля
         if spaceship_y < spaceship_height / 2:
             spaceship_y = spaceship_height / 2
         if spaceship_y > HEIGHT - spaceship_height:
@@ -171,7 +173,7 @@ while running:
         remaining_meteorits = []
 
         for meteorit in meteorits:
-            # Флаг на столкновение
+            #столкновение
             hit = False
             
             meteorit_rect = pygame.Rect(meteorit["x"] - meteorit_radius, meteorit["y"] - meteorit_radius, meteorit_radius * 2, meteorit_radius * 2)
@@ -193,14 +195,15 @@ while running:
             if not hit:
                 remaining_meteorits.append(meteorit)
 
-
         meteorits = remaining_meteorits
 
     screen.blit(background_image, (0, 0))
 
+    #вывод метеоритов
     for meteorit in meteorits:
         screen.blit(meteorit_image, (meteorit["x"] - meteorit_radius, meteorit["y"] - meteorit_radius))
         
+    #вывод пуль
     for bullet in bullets:
         screen.blit(bullet_image, (bullet["x"] - bullet_radius // 2, bullet["y"] - bullet_radius // 2))
         
@@ -208,19 +211,28 @@ while running:
     
     #Счет
     score_text = font.render(f"Метеоритов отбито: {score}", True, (255, 255, 255))
-    
     #Жизни
     lives_text = font.render(f"Полная поломка через: {lives}", True, (255, 255, 255))
+    #вывод текстов
     screen.blit(score_text, (25, 25))
-    screen.blit(lives_text, (WIDTH - 300, 25))
+    screen.blit(lives_text, (WIDTH - 360, 25))
 
+    #пауза
     if paused:
+        #текст
         paused_text = font.render("Пауза!", True, (255, 255, 255))
-        control_text = font.render("WS - управление, E - выстрел, TAB - пауза/продолжить, C - включить/выключить музыку", True, (255, 255, 255))
+        control_text = font.render("WS - управление, E - выстрел", True, (255, 255, 255))
+        control_text2 = font.render("TAB - пауза/продолжить, C - включить/выключить музыку", True, (255, 255, 255))
+
+        #расположение текста
         pause_rect = paused_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
-        control_rect = control_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 - 40))
+        control_rect = control_text.get_rect(center = (WIDTH // 2, HEIGHT // 2 + 70))
+        control_rect2 = control_text2.get_rect(center = (WIDTH // 2, HEIGHT // 2 + 90))
+
+        #вывод текста
         screen.blit(paused_text, pause_rect)
         screen.blit(control_text, control_rect)
+        screen.blit(control_text2, control_rect2)
 
     pygame.display.flip()
 
@@ -230,34 +242,35 @@ while running:
     #если жизней меньше или равно нулю = экран проигрыша
     if lives <= 0:
         running = False
+        showing_game_over = True
 
+#выкл музыки
 pygame.mixer.music.stop()
-
-game_over_text = game_over.render("Игра окончена!", True, (255, 255, 255))
-game_over_X = game_over.render("Нажмите X, чтобы закрыть игру.", True, (255, 255, 255))
-
-showing_game_over = True
 
 #пока показывает экран проигрыша
 while showing_game_over:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x:
-                showing_game_over = False
-        elif event.type == pygame.QUIT:
-            if event.type == pygame.QUIT:
+            if event.key == pygame.K_x or event.type == pygame.QUIT:
                 showing_game_over = False
 
     screen.blit(over_background_image, (0, 0))
+
+    #текст
+    game_over_text = game_over.render("Игра окончена!", True, (255, 255, 255))
+    game_over_X = game_over.render("Нажмите X, чтобы закрыть игру.", True, (255, 255, 255))
+
+    #вывод текста
     screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2 - game_over_text.get_height() // 2))
     screen.blit(game_over_X, (WIDTH // 2 - game_over_X.get_width() // 2, HEIGHT - game_over_X.get_height() // 2 - 30))
+
     pygame.display.flip()
-    clock.tick(60)
 
 pygame.quit()
 
 
 #TODO:
-# 1. Начальный экран
-# 2. окно проигрыша/завершение игры
-# 3. добавить комментарии
+# 1. добавить комментарии
+
+# игра .. main_track.mp3
+# конец .. over_track.mp3
