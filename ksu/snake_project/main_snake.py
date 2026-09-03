@@ -3,10 +3,14 @@ import random
 import os
 
 from game import config as cfg
+from game import snake
+from game import functions as funct
 
 pygame.init()
 
 clock = pygame.time.Clock()
+
+snake = snake.Snake()
 
 # папки - пути
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,46 +34,17 @@ pygame.time.set_timer(boost_event, 45000)
 obstacle_event = pygame.USEREVENT + 3
 pygame.time.set_timer(obstacle_event, 25000)
 
-# препятствие
-def get_obstacle():
-    if len(cfg.current_obstacles) < 4:
+#сама игра
+running = False
 
-        base_obstacle_block = [
-            random.randrange(cfg.FIELD_LEFT + 4 * cfg.BLOCK, cfg.FIELD_RIGHT - 4 * cfg.BLOCK, cfg.BLOCK), 
-            random.randrange(cfg.FIELD_UP + 4 * cfg.BLOCK, cfg.FIELD_DOWN - 4 * cfg.BLOCK, cfg.BLOCK)
-            ]
-        
-        obstacles_list = [ [ [base_obstacle_block[0] - 20, base_obstacle_block[1]], base_obstacle_block ], [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]] ],
-        [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20] ],
-        [base_obstacle_block, [base_obstacle_block[0] +20, base_obstacle_block[1]], [base_obstacle_block[0], base_obstacle_block[1] + 20], [base_obstacle_block[0] + 20, base_obstacle_block[1] + 20], 
-        [base_obstacle_block[0] + 20, base_obstacle_block[1] - 20] ], [base_obstacle_block, [base_obstacle_block[0] - 20, base_obstacle_block[1]], [base_obstacle_block[0] +20, base_obstacle_block[1]] ] ]
+# пауза
+paused = False
 
-        figure = random.choice(obstacles_list)
+# окно конца игры
+game_over = False
 
-        if (figure not in (cfg.snake_body and cfg.current_boost and cfg.current_food)) and next_pos not in figure:
-            cfg.current_obstacles.append(figure)
-    
-
-#периодическое появление еды. не больше 4 за раз
-def get_food():
-    if len(cfg.current_food) < 5:
-        food_pos = [
-            random.randrange(cfg.FIELD_LEFT + 2 * cfg.BLOCK, cfg.FIELD_RIGHT - 2 * cfg.BLOCK, cfg.BLOCK), 
-            random.randrange(cfg.FIELD_UP + 2 * cfg.BLOCK, cfg.FIELD_DOWN - 2 * cfg.BLOCK, cfg.BLOCK)
-            ]
-        if food_pos not in (cfg.snake_body and cfg.current_boost and cfg.current_food and cfg.current_obstacles) and food_pos != next_pos:
-            cfg.current_food.append(food_pos)
-
-# появление еды
-def boost_spawn():
-    if len(cfg.current_boost) < 2:
-        boost_pos = [
-            random.randrange(cfg.FIELD_LEFT + 2 * cfg.BLOCK, cfg.FIELD_RIGHT - 2 * cfg.BLOCK, cfg.BLOCK), 
-            random.randrange(cfg.FIELD_UP + 2 * cfg.BLOCK, cfg.FIELD_DOWN - 2 * cfg.BLOCK, cfg.BLOCK)
-        ]
-        if (boost_pos not in (cfg.snake_body and cfg.current_boost and cfg.current_food and cfg.current_obstacles)) and next_pos != boost_pos : 
-            cfg.current_boost.append(boost_pos)
-
+# окно начала
+start_screen = True
 
 # сетка
 def draw_grid():
@@ -84,18 +59,6 @@ def draw_grid():
     while x <= cfg.WIDTH - cfg.rl_edge:
         pygame.draw.line(screen, (161,206,247), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
         x += cfg.BLOCK
-
-#сама игра
-running = False
-
-# пауза
-paused = False
-
-# окно конца игры
-game_over = False
-
-# окно начала
-start_screen = True
 
 
 while start_screen:
@@ -123,13 +86,13 @@ while running:
             running = False 
 
         if event.type == food_event and not paused:
-            get_food() 
+            funct.get_food() 
 
         if event.type == boost_event and not paused:
-            boost_spawn()
+            funct.boost_spawn()
 
         if event.type == obstacle_event and not paused:
-            get_obstacle()
+            funct.get_obstacle()
             cfg.obstacle_lifetime = pygame.time.get_ticks() + 20000
 
         if event.type == pygame.KEYDOWN:
@@ -162,15 +125,6 @@ while running:
 
         elif cfg.direction == 'RIGHT':
             cfg.snake_position[0] += cfg.BLOCK
-
-        if cfg.direction == 'UP':
-            next_pos = [cfg.snake_position[0], cfg.snake_position[1] - cfg.BLOCK]
-        elif cfg.direction == 'DOWN':
-            next_pos = [cfg.snake_position[0], cfg.snake_position[1] + cfg.BLOCK]
-        elif cfg.direction == 'LEFT':
-            next_pos = [cfg.snake_position[0] - cfg.BLOCK, cfg.snake_position[1]]
-        elif cfg.direction == 'RIGHT':
-            next_pos = [cfg.snake_position[0] + cfg.BLOCK, cfg.snake_position[1]]
             
                
         if cfg.boost_end_time and pygame.time.get_ticks() >= cfg.boost_end_time:
@@ -192,21 +146,8 @@ while running:
         screen.blit(ingame_score, ingame_score_rect)
 
         # постоянная перезапись головы и удаление хвоста для иллюзии движения
-        cfg.snake_body.insert(0, list(cfg.snake_position))
+        snake.update_body()
 
-        ate = False
-
-        #проверка на столкновение с едой
-        for food in cfg.current_food:
-            if food == cfg.snake_position:
-                cfg.current_food.remove(food)
-                ate = True
-                cfg.score += 5000
-                break
-        
-        #удаление хвоста
-        if not ate:
-            cfg.snake_body.pop()
 
         # рендер каждой части змеюки
         for one in cfg.snake_body:
@@ -225,14 +166,12 @@ while running:
 
         for obs in cfg.current_obstacles:
             for block in obs:
-                if next_pos == block:
+                if cfg.next_pos == block:
                     game_over = True
                     running = False
 
         # проверка на столкновение с границами
-        if (cfg.snake_position[0] == cfg.FIELD_RIGHT - cfg.BLOCK and cfg.direction == "RIGHT") or (cfg.snake_position[0] == cfg.FIELD_LEFT and cfg.direction == "LEFT") or (
-            cfg.snake_position[1] == cfg.FIELD_UP and cfg.direction == "UP") or (cfg.snake_position[1] == cfg.FIELD_DOWN - cfg.BLOCK and cfg.direction == "DOWN"):
-
+        if snake.check_collision_border():
             #sound
 
             # crash_time = pygame.USEREVENT +2

@@ -21,20 +21,36 @@ class Snake:
 
     # добавление новой части тела змейки и удаление хвоста, если змейка не ест
     # def update_body(self, grow):
+    def update_body(self):
+        cfg.snake_body.insert(0, list(cfg.snake_position))
         
+        ate = False
+
+        #проверка на столкновение с едой
+        for food in cfg.current_food:
+            if food == cfg.snake_position:
+                cfg.current_food.remove(food)
+                ate = True
+                cfg.score += 5000
+                break
+        
+        #удаление хвоста
+        if not ate:
+            cfg.snake_body.pop()
+
     # проверка столкновений с границами и самим собой True - столкновение, False - нет
-    def check_collision(self):
+    def check_collision_border(self):
         return (self.position[0] == cfg.FIELD_RIGHT - cfg.BLOCK and 
             self.direction == "RIGHT") or (self.position[0] == cfg.FIELD_LEFT and 
             self.direction == "LEFT") or (self.position[1] == cfg.FIELD_UP and 
             self.direction == "UP") or (self.position[1] == cfg.FIELD_DOWN - cfg.BLOCK and 
             self.direction == "DOWN")
             
-    def self_collision(self):
-        return self.position in self.body[1:]
+    # def self_collision(self):
+    #     return self.position in self.body[1:]
         
     # отрисовка змейки на экране    
-    def draw(self, screen):
+    # def draw(self, screen):
         
 # snake.update_body(True)
 
