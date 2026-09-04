@@ -44,5 +44,3 @@ current_obstacles = []
 #счет
 score = 0
 
-#начальное направление 
-direction = 'RIGHT'

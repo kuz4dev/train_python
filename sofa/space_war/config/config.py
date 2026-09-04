@@ -29,16 +29,29 @@ confines_x = WIDTH
 #высота положения корабля
 confines_y = HEIGHT // 2
 
-#широта корабля
-spaceship_width = 110
-#высота корабля
-spaceship_height = 100
-#широта положения корабля
-spaceship_x = WIDTH - 790
-#высота положения корабля
-spaceship_y = HEIGHT - spaceship_height - 30
-#скорость корабля
-spaceship_speed = 8
+# class Space_ship():
+#     def __init__(self, spaceship_width, spaceship_heigh, spaceship_x, spaceship_y, spaceship_speed):
+#         #широта корабля. 110
+#         self.spaceship_width = spaceship_width 
+#         #высота корабля. 100
+#         self.spaceship_heigh = spaceship_heigh
+#         #широта положения корабля. WIDTH - 790
+#         self.spaceship_x = spaceship_x
+#         #высота положения корабля. HEIGHT - self.spaceship_height - 30
+#         self.spaceship_y = spaceship_y
+#         #скорость корабля. 8
+#         self.spaceship_speed = spaceship_speed
+
+#         self.spaceship_width = 110
+#         #высота корабля. 100
+#         self.spaceship_heigh = spaceship_heigh
+#         #широта положения корабля. WIDTH - 790
+#         self.spaceship_x = spaceship_x
+#         #высота положения корабля. HEIGHT - self.spaceship_height - 30
+#         self.spaceship_y = spaceship_y
+#         #скорость корабля. 8
+#         self.spaceship_speed = spaceship_speed
+
 
 #широта метеорита
 meteorit_x = WIDTH - 30
@@ -64,8 +77,6 @@ spawn_interval = 80
 score = 0
 #жизни
 lives = 3
-
-font_path = pygame.font.Font(os.path.join(ASSETS_DIR,"pixelmplusbold.ttf"), 15)
 
 paused = False
 music = True

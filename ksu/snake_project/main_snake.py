@@ -4,7 +4,7 @@ import os
 
 from game import config as cfg
 from game import snake
-from game import functions as funct
+from game import functions 
 
 pygame.init()
 
@@ -46,19 +46,7 @@ game_over = False
 # окно начала
 start_screen = True
 
-# сетка
-def draw_grid():
-    #горизонтальные линии. -80 - отступ
-    y = cfg.upper_edge
-    while y <= cfg.HEIGHT - cfg.down_edge:
-        pygame.draw.line(screen, (161,206,247), (cfg.rl_edge, y), (cfg.WIDTH - cfg.rl_edge, y), 2)
-        y += cfg.BLOCK
 
-    #вертикальные
-    x = cfg.rl_edge
-    while x <= cfg.WIDTH - cfg.rl_edge:
-        pygame.draw.line(screen, (161,206,247), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
-        x += cfg.BLOCK
 
 
 while start_screen:
@@ -86,13 +74,13 @@ while running:
             running = False 
 
         if event.type == food_event and not paused:
-            funct.get_food() 
+            functions.get_food(next_pos) 
 
         if event.type == boost_event and not paused:
-            funct.boost_spawn()
+            functions.boost_spawn(next_pos)
 
         if event.type == obstacle_event and not paused:
-            funct.get_obstacle()
+            functions.get_obstacle(next_pos)
             cfg.obstacle_lifetime = pygame.time.get_ticks() + 20000
 
         if event.type == pygame.KEYDOWN:
@@ -103,30 +91,38 @@ while running:
             if not paused:
 
                 #изменение направления змейки
-                if event.key == pygame.K_w and cfg.direction != 'DOWN':
-                    cfg.direction = 'UP'
-                elif event.key == pygame.K_s and cfg.direction != 'UP':
-                    cfg.direction = 'DOWN'
-                elif event.key == pygame.K_a and cfg.direction != 'RIGHT':
-                    cfg.direction = 'LEFT'
-                elif event.key == pygame.K_d and cfg.direction != 'LEFT':
-                    cfg.direction = 'RIGHT'
+                if event.key == pygame.K_w:
+                    snake.change_direction('UP')
+                elif event.key == pygame.K_s:
+                    snake.change_direction('DOWN')
+                elif event.key == pygame.K_a:
+                    snake.change_direction('LEFT')
+                elif event.key == pygame.K_d:
+                    snake.change_direction('RIGHT')
+
+                if snake.direction == 'UP':
+                    next_pos = [snake.position[0], snake.position[1] - cfg.BLOCK]
+                elif snake.direction == 'DOWN':
+                    next_pos = [snake.position[0], snake.position[1] + cfg.BLOCK]
+                elif snake.direction == 'LEFT':
+                    next_pos = [snake.position[0] - cfg.BLOCK, snake.position[1]]
+                elif snake.direction == 'RIGHT':
+                    next_pos = [snake.position[0] + cfg.BLOCK, snake.position[1]]
 
     if not paused:
         # движение
-        if cfg.direction == 'UP':
-            cfg.snake_position[1] -= cfg.BLOCK
+        if snake.direction == 'UP':
+            snake.set_position([snake.position[0], snake.position[1] - cfg.BLOCK])
 
-        elif cfg.direction == 'DOWN':
-            cfg.snake_position[1] += cfg.BLOCK
+        elif snake.direction == 'DOWN':
+            snake.set_position([snake.position[0], snake.position[1] + cfg.BLOCK])
 
-        elif cfg.direction == 'LEFT':
-            cfg.snake_position[0] -= cfg.BLOCK
+        elif snake.direction == 'LEFT':
+            snake.set_position([snake.position[0] - cfg.BLOCK, snake.position[1]])
 
-        elif cfg.direction == 'RIGHT':
-            cfg.snake_position[0] += cfg.BLOCK
-            
-               
+        elif snake.direction == 'RIGHT':
+            snake.set_position([snake.position[0] + cfg.BLOCK, snake.position[1]])
+
         if cfg.boost_end_time and pygame.time.get_ticks() >= cfg.boost_end_time:
             cfg.speed -= cfg.SPEED_BOOST
             cfg.boost_end_time = 0
@@ -139,7 +135,7 @@ while running:
         screen.fill((161,241,247))
 
         # сетка
-        draw_grid()
+        functions.draw_grid(screen)
 
         ingame_score = score_font.render(f"SCORE: {str(cfg.score).zfill(15)}", True, (82,87,91))
         ingame_score_rect = ingame_score.get_rect(center = (cfg.WIDTH // 2, 50))
@@ -150,7 +146,7 @@ while running:
 
 
         # рендер каждой части змеюки
-        for one in cfg.snake_body:
+        for one in snake.body:
             pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
 
         #рендер еды
@@ -166,7 +162,7 @@ while running:
 
         for obs in cfg.current_obstacles:
             for block in obs:
-                if cfg.next_pos == block:
+                if next_pos == block:
                     game_over = True
                     running = False
 
@@ -182,13 +178,13 @@ while running:
             running = False
 
         # врезание змейки в себя
-        if cfg.snake_position in cfg.snake_body[1:]:
+        if snake.position in snake.body[1:]:
             game_over = True
             running = False
 
         # врезание в змейку и ускорение-возвращение
         for boost in cfg.current_boost:
-            if boost == cfg.snake_position:
+            if boost == snake.position:
                 cfg.current_boost.remove(boost)
                 cfg.speed += cfg.SPEED_BOOST
 

@@ -2,6 +2,8 @@ import pygame
 import random
 import os
 
+from config import Space_ship()
+
 # from config import BASE_DIR, ASSETS_DIR, WIDTH, HEIGHT, screen, spaceship_width, spaceship_height, spaceship_x, spaceship_y, spaceship_speed, meteorit_x, meteorit_y, meteorit_radius, meteorit_speed, bullet_radius, bullet_speed, bullets, meteorits, spawn_timer, spawn_interval, score, lives, font, paused, music, running
 
 pygame.init()
@@ -72,11 +74,6 @@ lives = 3
 font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
 game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 25)
 
-paused = False
-music = False
-running = False
-initial_window = True
-
 
 start_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "start_background.jpg")).convert()
 start_background_image = pygame.transform.scale(start_background_image, (WIDTH, HEIGHT))
@@ -96,11 +93,6 @@ meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteor
 bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
-pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
-pygame.mixer.music.set_volume(0.15)
-
-pygame.mixer.music.load(os.path.join(ASSETS_DIR, "over_track.mp3"))
-pygame.mixer.music.set_volume(0.15)
 
 while initial_window:
     screen.blit(start_background_image, (0, 0))
@@ -114,6 +106,9 @@ while initial_window:
             if event.key == pygame.K_r:
                 initial_window = False
                 running = True
+                pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
+                pygame.mixer.music.set_volume(0.15)
+                pygame.mixer.music.play(-1)
 
     pygame.display.flip()
 
@@ -246,6 +241,9 @@ while running:
 
 #выкл музыки
 pygame.mixer.music.stop()
+pygame.mixer.music.load(os.path.join(ASSETS_DIR, "over_track.mp3"))
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1)
 
 #пока показывает экран проигрыша
 while showing_game_over:
@@ -271,6 +269,3 @@ pygame.quit()
 
 #TODO:
 # 1. добавить комментарии
-
-# игра .. main_track.mp3
-# конец .. over_track.mp3
