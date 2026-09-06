@@ -47,11 +47,13 @@ class Snake:
             self.direction == "LEFT") or (self.position[1] == cfg.FIELD_UP and 
             self.direction == "UP") or (self.position[1] == cfg.FIELD_DOWN - cfg.BLOCK and 
             self.direction == "DOWN")
-
-    # def get_
             
-    # def self_collision(self):
-    #     return self.position in self.body[1:]
+    def self_collision(self):
+        return self.position in self.body[1:]
+
+    def draw_body(self, screen):
+        for one in self.body:
+            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
         
     # отрисовка змейки на экране    
     # def draw(self, screen):

@@ -1,16 +1,23 @@
 import pygame
-import random
 import os
 
 from game import config as cfg
-from game import snake
-from game import functions 
+from game import (
+    get_obstacle,
+    get_food,
+    boost_spawn,
+    draw_grid,
+    Snake,
+)
+from screens import (
+    show_start,
+)
 
 pygame.init()
 
 clock = pygame.time.Clock()
 
-snake = snake.Snake()
+snake = Snake()
 
 # папки - пути
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,61 +41,32 @@ pygame.time.set_timer(boost_event, 45000)
 obstacle_event = pygame.USEREVENT + 3
 pygame.time.set_timer(obstacle_event, 25000)
 
-#сама игра
-running = False
 
-# пауза
-paused = False
-
-# окно конца игры
-game_over = False
-
-# окно начала
-start_screen = True
+show_start(screen, pause_font, clock)
 
 
-
-
-while start_screen:
-    screen.fill((161,241,247))
-    
-    opening_text = pause_font.render(f"Нажмите пробел для начала игры", True, (82,87,91))
-    opening_text_rect = opening_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))
-    screen.blit(opening_text, opening_text_rect)
-
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                start_screen = False
-                running = True
-
-    pygame.display.flip()
-    
-    clock.tick(cfg.speed)
-
-
-while running:
+while cfg.running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False 
+            cfg.running = False 
 
-        if event.type == food_event and not paused:
-            functions.get_food(next_pos) 
+        if event.type == food_event and not cfg.paused:
+            get_food(next_pos) 
 
-        if event.type == boost_event and not paused:
-            functions.boost_spawn(next_pos)
+        if event.type == boost_event and not cfg.paused:
+            boost_spawn(next_pos)
 
-        if event.type == obstacle_event and not paused:
-            functions.get_obstacle(next_pos)
+        if event.type == obstacle_event and not cfg.paused:
+            get_obstacle(next_pos)
             cfg.obstacle_lifetime = pygame.time.get_ticks() + 20000
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                paused = not paused
+                cfg.paused = not cfg.paused
         
 
-            if not paused:
+            if not cfg.paused:
 
                 #изменение направления змейки
                 if event.key == pygame.K_w:
@@ -100,6 +78,7 @@ while running:
                 elif event.key == pygame.K_d:
                     snake.change_direction('RIGHT')
 
+                # следующая позиция змейки
                 if snake.direction == 'UP':
                     next_pos = [snake.position[0], snake.position[1] - cfg.BLOCK]
                 elif snake.direction == 'DOWN':
@@ -109,7 +88,7 @@ while running:
                 elif snake.direction == 'RIGHT':
                     next_pos = [snake.position[0] + cfg.BLOCK, snake.position[1]]
 
-    if not paused:
+    if not cfg.paused:
         # движение
         if snake.direction == 'UP':
             snake.set_position([snake.position[0], snake.position[1] - cfg.BLOCK])
@@ -123,10 +102,12 @@ while running:
         elif snake.direction == 'RIGHT':
             snake.set_position([snake.position[0] + cfg.BLOCK, snake.position[1]])
 
+        # выключение ускорения
         if cfg.boost_end_time and pygame.time.get_ticks() >= cfg.boost_end_time:
             cfg.speed -= cfg.SPEED_BOOST
             cfg.boost_end_time = 0
 
+        # удаление препятствия для замены на новое
         if (cfg.obstacle_lifetime and pygame.time.get_ticks() >= cfg.obstacle_lifetime) and len(cfg.current_obstacles) == 4:
             print("функция заработала")
             cfg.current_obstacles.pop(0)
@@ -135,8 +116,9 @@ while running:
         screen.fill((161,241,247))
 
         # сетка
-        functions.draw_grid(screen)
+        draw_grid(screen)
 
+        # очки сверху экрана
         ingame_score = score_font.render(f"SCORE: {str(cfg.score).zfill(15)}", True, (82,87,91))
         ingame_score_rect = ingame_score.get_rect(center = (cfg.WIDTH // 2, 50))
         screen.blit(ingame_score, ingame_score_rect)
@@ -144,57 +126,47 @@ while running:
         # постоянная перезапись головы и удаление хвоста для иллюзии движения
         snake.update_body()
 
-
         # рендер каждой части змеюки
-        for one in snake.body:
-            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
+        snake.draw_body(screen)
 
         #рендер еды
         for piece in cfg.current_food:
             pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], cfg.BLOCK, cfg.BLOCK))
 
+        # буста
         for boost in cfg.current_boost:
             pygame.draw.rect(screen, (172,253,139) , pygame.Rect(boost[0], boost[1], cfg.BLOCK, cfg.BLOCK))
 
+        # препятствий поблочно
         for obs in cfg.current_obstacles:
             for block in obs:
                 pygame.draw.rect(screen, (32,62,15), pygame.Rect(block[0], block[1], cfg.BLOCK, cfg.BLOCK))
 
+        # столкновение с препятствием поблочно
         for obs in cfg.current_obstacles:
             for block in obs:
                 if next_pos == block:
-                    game_over = True
-                    running = False
+                    cfg.game_over = True
+                    cfg.running = False
 
-        # проверка на столкновение с границами
-        if snake.check_collision_border():
+        # проверка на столкновение с границами и врезание змейки в себя
+        if snake.check_collision_border() or snake.self_collision():
             #sound
 
             # crash_time = pygame.USEREVENT +2
             # pygame.time.set_timer(crash_time, 2500)
             # if event.type == crash_time:
             
-            game_over = True
-            running = False
+            cfg.game_over = True
+            cfg.running = False
 
-        # врезание змейки в себя
-        if snake.position in snake.body[1:]:
-            game_over = True
-            running = False
-
-        # врезание в змейку и ускорение-возвращение
-        for boost in cfg.current_boost:
-            if boost == snake.position:
-                cfg.current_boost.remove(boost)
-                cfg.speed += cfg.SPEED_BOOST
-
-                cfg.boost_end_time = pygame.time.get_ticks() + 10000
-                break
+        #ускорение-возвращение
+        snake.get_boost()
             
 
 
     #окно паузы
-    if paused:
+    if cfg.paused:
         # -text
         paused_text = pause_font.render("Пауза!", True, (82,87,91))
         pause_rect = paused_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))
@@ -206,7 +178,7 @@ while running:
 
 
 # окно конца игры
-while game_over:
+while cfg.game_over:
 
     screen.fill((161,241,247))
 
@@ -221,7 +193,7 @@ while game_over:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_x:
-                game_over = False
+                cfg.game_over = False
                 
 
     pygame.display.flip()

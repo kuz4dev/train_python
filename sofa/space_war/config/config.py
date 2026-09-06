@@ -21,13 +21,15 @@ pygame.display.set_caption("Леталки!")
 
 
 #широта корабля
-confines_width = 800
+spaceship_width = 110
 #высота корабля
-confines_height = 500
+spaceship_height = 100
 #широта положения корабля
-confines_x = WIDTH
+spaceship_x = WIDTH - 790
 #высота положения корабля
-confines_y = HEIGHT // 2
+spaceship_y = HEIGHT - spaceship_height - 30
+#скорость корабля
+spaceship_speed = 8
 
 # class Space_ship():
 #     def __init__(self, spaceship_width, spaceship_heigh, spaceship_x, spaceship_y, spaceship_speed):

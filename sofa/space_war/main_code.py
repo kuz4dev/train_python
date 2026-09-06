@@ -2,115 +2,54 @@ import pygame
 import random
 import os
 
-from config import Space_ship()
+from configuration import (
+    ASSETS_DIR, WIDTH, HEIGHT, screen, clock, score, lives,
+    spaceship_width, spaceship_height, spaceship_x, spaceship_y, spaceship_speed,
+    meteorit_x, meteorit_y, meteorit_radius, meteorit_speed, meteorits, spawn_timer, spawn_interval,
+    bullet_radius, bullet_speed, bullets,
+    paused, music, running, initial_window, showing_game_over,
+)
 
-# from config import BASE_DIR, ASSETS_DIR, WIDTH, HEIGHT, screen, spaceship_width, spaceship_height, spaceship_x, spaceship_y, spaceship_speed, meteorit_x, meteorit_y, meteorit_radius, meteorit_speed, bullet_radius, bullet_speed, bullets, meteorits, spawn_timer, spawn_interval, score, lives, font, paused, music, running
+from game import (
+    initial_screen,
+    gameover_screen,
+)
 
 pygame.init()
 
-clock = pygame.time.Clock()
-
-# Папка, где лежит сам скрипт
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Папка с ассетами
-ASSETS_DIR = os.path.join(BASE_DIR, "assets")
-
-#ширина окна
-WIDTH = 800
-#высота окна
-HEIGHT = 600
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #название игры
 pygame.display.set_caption("Леталки!")
 
-
-#широта корабля
-confines_width = 800
-#высота корабля
-confines_height = 500
-#широта положения корабля
-confines_x = WIDTH
-#высота положения корабля
-confines_y = HEIGHT // 2
-
-#широта корабля
-spaceship_width = 110
-#высота корабля
-spaceship_height = 100
-#широта положения корабля
-spaceship_x = WIDTH - 790
-#высота положения корабля
-spaceship_y = HEIGHT - spaceship_height - 30
-#скорость корабля
-spaceship_speed = 8
-
-#широта метеорита
-meteorit_x = WIDTH - 30
-#высота метеорита
-meteorit_y = HEIGHT
-#радиус метеорита
-meteorit_radius = 15 * 4
-#скорость метеорита
-meteorit_speed = 5
-
-#радиус снаряда
-bullet_radius = 25
-#скорость снаряда
-bullet_speed = 7
-
-bullets = []
-meteorits = []
-spawn_timer = 0
-# Интервал между появлением метеоритов в миллисекундах
-spawn_interval = 80  
-
-#cчет
-score = 0
-#жизни
-lives = 3
-
-#
+#шрифты
 font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
 game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 25)
 
-
+#начальный задний фон
 start_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "start_background.jpg")).convert()
 start_background_image = pygame.transform.scale(start_background_image, (WIDTH, HEIGHT))
 
+#во время игры задний фон
 background_image = pygame.image.load(os.path.join(ASSETS_DIR, "background.png")).convert()
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
+#конечный задний фон
 over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
 over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
 
+#корабль
 spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
 spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
 
+#метеорит
 meteorit_image = pygame.image.load(os.path.join(ASSETS_DIR, "meteorit.png")).convert_alpha()
 meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteorit_radius))
 
+#пуля
 bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
 
-while initial_window:
-    screen.blit(start_background_image, (0, 0))
-    
-    opening_text = game_over.render(f"R - для начала игры", True, (255,242,97))
-    opening_text_rect = opening_text.get_rect(center = (WIDTH // 2, HEIGHT // 2))
-    screen.blit(opening_text, opening_text_rect)
-
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                initial_window = False
-                running = True
-                pygame.mixer.music.load(os.path.join(ASSETS_DIR, "main_track.mp3"))
-                pygame.mixer.music.set_volume(0.15)
-                pygame.mixer.music.play(-1)
-
-    pygame.display.flip()
+running = initial_screen(screen, game_over, start_background_image, initial_window)
 
 while running:
     for event in pygame.event.get():
@@ -245,24 +184,9 @@ pygame.mixer.music.load(os.path.join(ASSETS_DIR, "over_track.mp3"))
 pygame.mixer.music.set_volume(0.15)
 pygame.mixer.music.play(-1)
 
-#пока показывает экран проигрыша
-while showing_game_over:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_x or event.type == pygame.QUIT:
-                showing_game_over = False
+gameover_screen(screen, game_over, over_background_image, showing_game_over)
 
-    screen.blit(over_background_image, (0, 0))
-
-    #текст
-    game_over_text = game_over.render("Игра окончена!", True, (255, 255, 255))
-    game_over_X = game_over.render("Нажмите X, чтобы закрыть игру.", True, (255, 255, 255))
-
-    #вывод текста
-    screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2 - game_over_text.get_height() // 2))
-    screen.blit(game_over_X, (WIDTH // 2 - game_over_X.get_width() // 2, HEIGHT - game_over_X.get_height() // 2 - 30))
-
-    pygame.display.flip()
+pygame.display.flip()
 
 pygame.quit()
 
