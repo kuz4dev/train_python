@@ -4,6 +4,18 @@ HEIGHT = 800
 BLOCK = 20
 speed = 7
 
+# окно конца игры
+game_over = False
+
+# окно начала
+start_screen = True
+
+#сама игра
+running = False
+
+# пауза
+paused = False
+
 #счет
 score = 0
 

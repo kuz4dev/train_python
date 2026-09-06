@@ -54,8 +54,15 @@ class Snake:
     def draw_body(self, screen):
         for one in self.body:
             pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
-        
-    # отрисовка змейки на экране    
-    # def draw(self, screen):
+
+    def get_boost(self):
+        # врезание в змейку и ускорение-возвращение
+        for boost in cfg.current_boost:
+            if boost == self.position:
+                cfg.current_boost.remove(boost)
+                cfg.speed += cfg.SPEED_BOOST
+
+                cfg.boost_end_time = pygame.time.get_ticks() + 10000
+                break
     
         
