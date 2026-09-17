@@ -59,3 +59,34 @@ music = True
 running = False
 initial_window = True
 showing_game_over = False
+
+
+
+#шрифты
+font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
+game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 25)
+
+#начальный задний фон
+start_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "start_background.jpg")).convert()
+start_background_image = pygame.transform.scale(start_background_image, (WIDTH, HEIGHT))
+
+#во время игры задний фон
+background_image = pygame.image.load(os.path.join(ASSETS_DIR, "background.png")).convert()
+background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+#конечный задний фон
+over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
+over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
+
+#корабль
+spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
+spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))
+
+#метеорит
+meteorit_image = pygame.image.load(os.path.join(ASSETS_DIR, "meteorit.png")).convert_alpha()
+meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteorit_radius))
+
+#пуля
+bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
+bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
+

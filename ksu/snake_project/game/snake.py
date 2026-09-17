@@ -65,4 +65,15 @@ class Snake:
                 cfg.boost_end_time = pygame.time.get_ticks() + 10000
                 break
     
-        
+    def get_next_position(self):
+        # следующая позиция змейки
+        if self.direction == 'UP':
+            next_pos = [self.position[0], self.position[1] - cfg.BLOCK]
+        elif self.direction == 'DOWN':
+            next_pos = [self.position[0], self.position[1] + cfg.BLOCK]
+        elif self.direction == 'LEFT':
+            next_pos = [self.position[0] - cfg.BLOCK, self.position[1]]
+        elif self.direction == 'RIGHT':
+            next_pos = [self.position[0] + cfg.BLOCK, self.position[1]]
+    
+        return next_pos
