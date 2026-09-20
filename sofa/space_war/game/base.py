@@ -1,10 +1,12 @@
-import os
 import pygame
 import random
 
 from configuration import config as cfg
+from .space_ship import Spaceship
 
 def playng_game():
+    ship = Spaceship()
+    
     while cfg.running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -25,19 +27,7 @@ def playng_game():
                         pygame.mixer.music.pause()
                     
         if not cfg.paused:
-            keys = pygame.key.get_pressed()
-            
-            #Передвижение корабля
-            if keys[pygame.K_UP] or keys[pygame.K_w]:
-                cfg.spaceship_y -= cfg.spaceship_speed
-            if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-                cfg.spaceship_y += cfg.spaceship_speed
-
-            #ограничение корабля
-            if cfg.spaceship_y < cfg.spaceship_height / 2:
-                cfg.spaceship_y = cfg.spaceship_height / 2
-            if cfg.spaceship_y > cfg.HEIGHT - cfg.spaceship_height:
-                cfg.spaceship_y = cfg.HEIGHT - cfg.spaceship_height
+            ship.move(pygame.key.get_pressed())
 
             # Логика метеоритов
             cfg.spawn_timer += 1
@@ -56,7 +46,7 @@ def playng_game():
                 
             cfg.bullets = [b for b in cfg.bullets if b["x"] < cfg.WIDTH]
             
-            spaceship_rect = pygame.Rect(cfg.spaceship_x, cfg.spaceship_y, cfg.spaceship_width, cfg.spaceship_height)
+            spaceship_rect = ship.rect
 
             remaining_meteorits = []
 
@@ -69,6 +59,7 @@ def playng_game():
                 if spaceship_rect.colliderect(meteorit_rect):
                     cfg.lives -= 1
                     hit = True
+                    ship.is_alive()
 
                 for bullet in cfg.bullets:
                     bullet_rect = pygame.Rect(bullet["x"] - cfg.bullet_radius // 2, bullet["y"] - cfg.bullet_radius // 2, cfg.bullet_radius, cfg.bullet_radius)
@@ -94,8 +85,8 @@ def playng_game():
         #вывод пуль
         for bullet in cfg.bullets:
             cfg.screen.blit(cfg.bullet_image, (bullet["x"] - cfg.bullet_radius // 2, bullet["y"] - cfg.bullet_radius // 2))
-            
-        cfg.screen.blit(cfg.spaceship_image, (cfg.spaceship_x, cfg.spaceship_y))
+        
+        ship.draw()
         
         #Счет
         score_text = cfg.font.render(f"Метеоритов отбито: {cfg.score}", True, (255, 255, 255))
@@ -127,8 +118,5 @@ def playng_game():
         #фпс
         cfg.clock.tick(60)
 
-        #если жизней меньше или равно нулю = экран проигрыша
-        if cfg.lives <= 0:
-            cfg.running = False
-            cfg.showing_game_over = True
+        
 

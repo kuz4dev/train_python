@@ -4,7 +4,7 @@ from game import config as cfg
 
 def show_start(screen, pause_font, clock):
     while cfg.start_screen:
-        screen.fill((161,241,247))
+        screen.blit(cfg.bedroom_backgroung, (0, 0))
         
         opening_text = pause_font.render(f"Нажмите пробел для начала игры", True, (82,87,91))
         opening_text_rect = opening_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))

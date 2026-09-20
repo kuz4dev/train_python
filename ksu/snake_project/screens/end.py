@@ -6,7 +6,7 @@ def show_end(screen, pause_font, clock):
     # окно конца игры
     while cfg.game_over:
 
-        screen.fill((161,241,247))
+        screen.blit(cfg.bedroom_backgroung, (0, 0))
 
         go_show_score = pause_font.render(f"Игра закончена! Ваш счет: {cfg.score}", True, (82,87,91))
         go_score_rect = go_show_score.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))

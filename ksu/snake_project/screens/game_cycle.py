@@ -70,7 +70,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                 cfg.current_obstacles.pop(0)
                 cfg.obstacle_lifetime = 0
 
-            screen.fill((161,241,247))
+            screen.blit(cfg.snake_game_background, (0, 0))
 
             # сетка
             draw_grid(screen)

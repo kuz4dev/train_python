@@ -1,3 +1,6 @@
+import pygame
+import os
+
 # размеры экрана и блока
 WIDTH = 1000
 HEIGHT = 800
@@ -56,3 +59,23 @@ current_obstacles = []
 #счет
 score = 0
 
+# папки - пути
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, '..', 'snake_assets')
+
+snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "snake_background.jpg")).convert()
+snake_game_background = pygame.transform.scale(snake_game_background, (WIDTH, HEIGHT) )
+
+bedroom_backgroung = pygame.image.load(os.path.join(ASSETS_DIR, "bedroom.png")).convert()
+bedroom_backgroung = pygame.transform.scale(bedroom_backgroung, (WIDTH, HEIGHT))
+
+console_image = pygame.image.load(os.path.join(ASSETS_DIR, "GameWatch.png")).convert_alpha()
+console_image = pygame.transform.scale(console_image, (WIDTH - 400, HEIGHT - 250))
+
+# #конечный задний фон
+# over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
+# over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
+
+# #корабль
+# spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
+# spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))

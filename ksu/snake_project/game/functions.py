@@ -47,11 +47,11 @@ def draw_grid(screen):
     #горизонтальные линии. -80 - отступ
     y = cfg.upper_edge
     while y <= cfg.HEIGHT - cfg.down_edge:
-        pygame.draw.line(screen, (161,206,247), (cfg.rl_edge, y), (cfg.WIDTH - cfg.rl_edge, y), 2)
+        pygame.draw.line(screen, (243,227,253), (cfg.rl_edge, y), (cfg.WIDTH - cfg.rl_edge, y), 2)
         y += cfg.BLOCK
 
     #вертикальные
     x = cfg.rl_edge
     while x <= cfg.WIDTH - cfg.rl_edge:
-        pygame.draw.line(screen, (161,206,247), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
+        pygame.draw.line(screen, (243,227,253), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
         x += cfg.BLOCK

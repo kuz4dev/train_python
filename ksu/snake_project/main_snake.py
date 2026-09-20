@@ -22,17 +22,13 @@ pygame.time.set_timer(obstacle_event, 25000)
 
 clock = pygame.time.Clock()
 
-# папки - пути
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR = os.path.join(BASE_DIR, 'snake_assets')
-
 screen = pygame.display.set_mode((cfg.WIDTH, cfg.HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
-score_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
+score_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
 
-pause_font = pygame.font.Font(os.path.join(ASSETS_DIR, 'en-us.ttf'), 25)
+pause_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'en-us.ttf'), 25)
 
 
 show_start(screen, pause_font, clock)
