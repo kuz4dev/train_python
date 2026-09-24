@@ -60,8 +60,6 @@ running = False
 initial_window = True
 showing_game_over = False
 
-
-
 #шрифты
 font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
 game_over = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 25)

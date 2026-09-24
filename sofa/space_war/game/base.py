@@ -11,7 +11,7 @@ def playng_game():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_e:
-                    cfg.bullets.append({"x": cfg.spaceship_x + cfg.spaceship_width, "y": cfg.spaceship_y + (cfg.spaceship_height // 2)})
+                    cfg.bullets.append(ship.shoot())
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_TAB:
                     if cfg.paused:
@@ -57,9 +57,10 @@ def playng_game():
                 meteorit_rect = pygame.Rect(meteorit["x"] - cfg.meteorit_radius, meteorit["y"] - cfg.meteorit_radius, cfg.meteorit_radius * 2, cfg.meteorit_radius * 2)
 
                 if spaceship_rect.colliderect(meteorit_rect):
-                    cfg.lives -= 1
                     hit = True
-                    ship.is_alive()
+                    alive = ship.minus_lives()
+                    cfg.running = alive
+                    cfg.showing_game_over = not alive
 
                 for bullet in cfg.bullets:
                     bullet_rect = pygame.Rect(bullet["x"] - cfg.bullet_radius // 2, bullet["y"] - cfg.bullet_radius // 2, cfg.bullet_radius, cfg.bullet_radius)
@@ -91,7 +92,7 @@ def playng_game():
         #Счет
         score_text = cfg.font.render(f"Метеоритов отбито: {cfg.score}", True, (255, 255, 255))
         #Жизни
-        lives_text = cfg.font.render(f"Полная поломка через: {cfg.lives}", True, (255, 255, 255))
+        lives_text = cfg.font.render(f"Полная поломка через: {ship.lives}", True, (255, 255, 255))
         #вывод текстов
         cfg.screen.blit(score_text, (25, 25))
         cfg.screen.blit(lives_text, (cfg.WIDTH - 360, 25))

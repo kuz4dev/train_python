@@ -1,6 +1,8 @@
 import pygame
 import os
 
+pygame.init()
+
 # размеры экрана и блока
 WIDTH = 1000
 HEIGHT = 800
@@ -63,14 +65,24 @@ score = 0
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, '..', 'snake_assets')
 
-snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "snake_background.jpg")).convert()
-snake_game_background = pygame.transform.scale(snake_game_background, (WIDTH, HEIGHT) )
+def load_assets():
+    global snake_game_background, bedroom_background, console_image, console_rect, food_image_apple, food_image_strawberry
+    
+    snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "snake_background.jpg")).convert()
+    snake_game_background = pygame.transform.scale(snake_game_background, (WIDTH, HEIGHT) )
 
-bedroom_backgroung = pygame.image.load(os.path.join(ASSETS_DIR, "bedroom.png")).convert()
-bedroom_backgroung = pygame.transform.scale(bedroom_backgroung, (WIDTH, HEIGHT))
+    bedroom_background = pygame.image.load(os.path.join(ASSETS_DIR, "bedroom.png")).convert()
+    bedroom_background = pygame.transform.scale(bedroom_background, (WIDTH, HEIGHT))
 
-console_image = pygame.image.load(os.path.join(ASSETS_DIR, "GameWatch.png")).convert_alpha()
-console_image = pygame.transform.scale(console_image, (WIDTH - 400, HEIGHT - 250))
+    console_image = pygame.image.load(os.path.join(ASSETS_DIR, "GameWatch.png")).convert_alpha()
+    console_image = pygame.transform.scale(console_image, (WIDTH - 400, HEIGHT - 250))
+    console_rect = console_image.get_rect(center = (WIDTH // 2, HEIGHT //2 ))
+
+    food_image_apple = pygame.image.load(os.path.join(ASSETS_DIR, "apple.png")).convert_alpha()
+    food_image_apple = pygame.transform.scale(food_image_apple, (BLOCK, BLOCK))
+
+    food_image_strawberry = pygame.image.load(os.path.join(ASSETS_DIR, "strawberry.png")).convert_alpha()
+    food_image_strawberry = pygame.transform.scale(food_image_strawberry, (BLOCK, BLOCK))
 
 # #конечный задний фон
 # over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()

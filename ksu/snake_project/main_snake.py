@@ -26,6 +26,8 @@ screen = pygame.display.set_mode((cfg.WIDTH, cfg.HEIGHT))
 
 pygame.display.set_caption("Змейка")
 
+cfg.load_assets()
+
 score_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
 
 pause_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'en-us.ttf'), 25)

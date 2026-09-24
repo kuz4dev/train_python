@@ -17,8 +17,6 @@ def gameover_screen():
                 if event.key == pygame.K_x or event.type == pygame.QUIT:
                     cfg.showing_game_over = False
 
-        
-
         cfg.screen.blit(cfg.over_background_image, (0, 0))
 
         #текст

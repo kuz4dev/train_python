@@ -88,8 +88,8 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
 
             #рендер еды
             for piece in cfg.current_food:
-                pygame.draw.rect(screen, (174,139,253) , pygame.Rect(piece[0], piece[1], cfg.BLOCK, cfg.BLOCK))
-
+                screen.blit(cfg.food_image_apple, (piece[0], piece[1]))
+                
             # буста
             for boost in cfg.current_boost:
                 pygame.draw.rect(screen, (172,253,139) , pygame.Rect(boost[0], boost[1], cfg.BLOCK, cfg.BLOCK))
