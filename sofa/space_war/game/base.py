@@ -4,27 +4,36 @@ import random
 from configuration import config as cfg
 from .space_ship import Spaceship
 
+#пока показывает основную игру
 def playng_game():
+    #сокращение названия
     ship = Spaceship()
     
     while cfg.running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
+                #если кнопка e нажата
                 if event.key == pygame.K_e:
+                    #выпуск пули
                     cfg.bullets.append(ship.shoot())
             if event.type == pygame.KEYDOWN:
+                #если нажат таб
                 if event.key == pygame.K_TAB:
+                    # если игра на паузе
                     if cfg.paused:
+                        #постави
                         pygame.mixer.music.unpause()
+                        #
                     else:
                         pygame.mixer.music.pause()
                     cfg.paused = not cfg.paused
                 if event.key == pygame.K_c:
                     cfg.music = not cfg.music
-                    if cfg.music:
-                        pygame.mixer.music.unpause()
-                    else:
-                        pygame.mixer.music.pause()
+                    if not cfg.paused:
+                        if cfg.music:
+                            pygame.mixer.music.unpause()
+                        else:
+                            pygame.mixer.music.pause()
                     
         if not cfg.paused:
             ship.move(pygame.key.get_pressed())
@@ -118,6 +127,8 @@ def playng_game():
 
         #фпс
         cfg.clock.tick(60)
+
+
 
         
 
