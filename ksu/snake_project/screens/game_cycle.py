@@ -88,7 +88,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
 
             #рендер еды
             for piece in cfg.current_food:
-                screen.blit(cfg.food_image_apple, (piece[0], piece[1]))
+                screen.blit(piece[2], (piece[0], piece[1]))
                 
             # буста
             for boost in cfg.current_boost:
@@ -97,7 +97,8 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
             # препятствий поблочно
             for obs in cfg.current_obstacles:
                 for block in obs:
-                    pygame.draw.rect(screen, (32,62,15), pygame.Rect(block[0], block[1], cfg.BLOCK, cfg.BLOCK))
+                    screen.blit(cfg.obstacle_image, (block[0], block[1]))
+                    # pygame.draw.rect(screen, (32,62,15), pygame.Rect(block[0], block[1], cfg.BLOCK, cfg.BLOCK))
 
             # столкновение с препятствием поблочно
             for obs in cfg.current_obstacles:

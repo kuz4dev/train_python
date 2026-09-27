@@ -14,7 +14,7 @@ def show_end(screen, pause_font, clock):
         screen.blit(go_show_score, go_score_rect)
 
         exit_go_text = pause_font.render("Нажмите X для выхода", True, (82,87,91))
-        go_exit_rect = exit_go_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT - 50) )
+        go_exit_rect = exit_go_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) + 15) )
         screen.blit(exit_go_text, go_exit_rect)
 
         for event in pygame.event.get():

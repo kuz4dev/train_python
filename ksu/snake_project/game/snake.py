@@ -30,7 +30,7 @@ class Snake:
 
         #проверка на столкновение с едой
         for food in cfg.current_food:
-            if food == self.position:
+            if food[:2] == self.position:
                 cfg.current_food.remove(food)
                 ate = True
                 cfg.score += 5000

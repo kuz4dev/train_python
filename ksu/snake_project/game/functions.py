@@ -30,9 +30,9 @@ def get_food(next_pos):
             random.randrange(cfg.FIELD_UP + 2 * cfg.BLOCK, cfg.FIELD_DOWN - 2 * cfg.BLOCK, cfg.BLOCK)
             ]
         if food_pos not in (cfg.snake_body and cfg.current_boost and cfg.current_food and cfg.current_obstacles) and food_pos != next_pos:
-            cfg.current_food.append(food_pos)
+            cfg.current_food.append(food_pos + [random.choice(cfg.food_image)])
 
-# появление еды
+# появление буста
 def boost_spawn(next_pos):
     if len(cfg.current_boost) < 2:
         boost_pos = [

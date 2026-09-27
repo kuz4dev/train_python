@@ -30,8 +30,7 @@ cfg.load_assets()
 
 score_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'DigitalNumbers-Regular.ttf'), 30)
 
-pause_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'en-us.ttf'), 25)
-
+pause_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'en-us.ttf'), 18)
 
 show_start(screen, pause_font, clock)
 

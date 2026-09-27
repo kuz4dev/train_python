@@ -66,28 +66,26 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, '..', 'snake_assets')
 
 def load_assets():
-    global snake_game_background, bedroom_background, console_image, console_rect, food_image_apple, food_image_strawberry
+    global snake_game_background, bedroom_background, console_image, console_rect, food_image_apple, food_image_strawberry, food_image, obstacle_image
     
     snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "snake_background.jpg")).convert()
     snake_game_background = pygame.transform.scale(snake_game_background, (WIDTH, HEIGHT) )
 
     bedroom_background = pygame.image.load(os.path.join(ASSETS_DIR, "bedroom.png")).convert()
-    bedroom_background = pygame.transform.scale(bedroom_background, (WIDTH, HEIGHT))
+    bedroom_background = pygame.transform.scale(bedroom_background, (1820, 980))
 
     console_image = pygame.image.load(os.path.join(ASSETS_DIR, "GameWatch.png")).convert_alpha()
-    console_image = pygame.transform.scale(console_image, (WIDTH - 400, HEIGHT - 250))
+    console_image = pygame.transform.scale(console_image, (900, 600))
     console_rect = console_image.get_rect(center = (WIDTH // 2, HEIGHT //2 ))
 
     food_image_apple = pygame.image.load(os.path.join(ASSETS_DIR, "apple.png")).convert_alpha()
     food_image_apple = pygame.transform.scale(food_image_apple, (BLOCK, BLOCK))
 
+    obstacle_image = pygame.image.load(os.path.join(ASSETS_DIR, "Tile_45.png")).convert_alpha()
+    obstacle_image = pygame.transform.scale(obstacle_image, (BLOCK, BLOCK))
+
     food_image_strawberry = pygame.image.load(os.path.join(ASSETS_DIR, "strawberry.png")).convert_alpha()
     food_image_strawberry = pygame.transform.scale(food_image_strawberry, (BLOCK, BLOCK))
+    
+    food_image = [food_image_apple, food_image_strawberry]
 
-# #конечный задний фон
-# over_background_image = pygame.image.load(os.path.join(ASSETS_DIR, "over_background.jpg")).convert()
-# over_background_image = pygame.transform.scale(over_background_image, (WIDTH, HEIGHT))
-
-# #корабль
-# spaceship_image = pygame.image.load(os.path.join(ASSETS_DIR, "spaceship.png")).convert_alpha()
-# spaceship_image = pygame.transform.scale(spaceship_image, (spaceship_width, spaceship_height))

@@ -3,10 +3,11 @@ import random
 
 from configuration import config as cfg
 from .space_ship import Spaceship
+from .meteorit import Meteorit
 
 #пока показывает основную игру
 def playng_game():
-    #сокращение названия
+    # создаем экземпляры классов
     ship = Spaceship()
     
     while cfg.running:
@@ -43,12 +44,11 @@ def playng_game():
 
             if cfg.spawn_timer >= cfg.spawn_interval:
                 cfg.spawn_timer = 0
-                meteorit_y = random.randint(150, 600)
-                cfg.meteorits.append({"x": cfg.meteorit_x + 80, "y": meteorit_y})
+                cfg.meteorits.append(Meteorit())
 
 
             for meteorit in cfg.meteorits:
-                meteorit["x"] -= cfg.meteorit_speed
+                meteorit.move()
 
             for bullet in cfg.bullets:
                 bullet["x"] += cfg.bullet_speed
@@ -62,10 +62,8 @@ def playng_game():
             for meteorit in cfg.meteorits:
                 #столкновение
                 hit = False
-                
-                meteorit_rect = pygame.Rect(meteorit["x"] - cfg.meteorit_radius, meteorit["y"] - cfg.meteorit_radius, cfg.meteorit_radius * 2, cfg.meteorit_radius * 2)
 
-                if spaceship_rect.colliderect(meteorit_rect):
+                if spaceship_rect.colliderect(meteorit.rect):
                     hit = True
                     alive = ship.minus_lives()
                     cfg.running = alive
@@ -74,7 +72,7 @@ def playng_game():
                 for bullet in cfg.bullets:
                     bullet_rect = pygame.Rect(bullet["x"] - cfg.bullet_radius // 2, bullet["y"] - cfg.bullet_radius // 2, cfg.bullet_radius, cfg.bullet_radius)
                     
-                    if bullet_rect.colliderect(meteorit_rect):
+                    if bullet_rect.colliderect(meteorit.rect):
                         hit = True
                         cfg.score += 1
                         if bullet in cfg.bullets:
@@ -90,7 +88,7 @@ def playng_game():
 
         #вывод метеоритов
         for meteorit in cfg.meteorits:
-            cfg.screen.blit(cfg.meteorit_image, (meteorit["x"] - cfg.meteorit_radius, meteorit["y"] - cfg.meteorit_radius))
+            meteorit.draw()
             
         #вывод пуль
         for bullet in cfg.bullets:
@@ -129,6 +127,4 @@ def playng_game():
         cfg.clock.tick(60)
 
 
-
-        
-
+ #rect круг, draw отрисовка, move движение,  spawn появление
