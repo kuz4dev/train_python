@@ -65,7 +65,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                 cfg.boost_end_time = 0
 
             # удаление препятствия для замены на новое
-            if (cfg.obstacle_lifetime and pygame.time.get_ticks() >= cfg.obstacle_lifetime) and len(cfg.current_obstacles) == 4:
+            if (cfg.obstacle_lifetime and pygame.time.get_ticks() >= cfg.obstacle_lifetime) and len(cfg.current_obstacles) == 5:
                 print("функция заработала")
                 cfg.current_obstacles.pop(0)
                 cfg.obstacle_lifetime = 0

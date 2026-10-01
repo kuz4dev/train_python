@@ -17,7 +17,7 @@ def initial_screen():
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 # если r нажата
-                if event.key == pygame.K_r:
+                if event.scancode == pygame.KSCAN_R:
                     #закрытие начального окна
                     cfg.initial_window = False
                     #открытие игры

@@ -27,9 +27,9 @@ class Spaceship:
         
     # перемещение верх-вниз
     def move(self, keys):
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
+        if pygame.KSCAN_W in keys or pygame.KSCAN_UP in keys:
             self.y -= self.speed
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if pygame.KSCAN_S in keys or pygame.KSCAN_DOWN in keys:
             self.y += self.speed
             
         self.clamp_to_screen()

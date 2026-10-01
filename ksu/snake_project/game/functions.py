@@ -4,7 +4,7 @@ import pygame
 
 # препятствие
 def get_obstacle(next_pos):
-    if len(cfg.current_obstacles) < 4:
+    if len(cfg.current_obstacles) < 5:
 
         base_obstacle_block = [
             random.randrange(cfg.FIELD_LEFT + 4 * cfg.BLOCK, cfg.FIELD_RIGHT - 4 * cfg.BLOCK, cfg.BLOCK), 
@@ -34,7 +34,7 @@ def get_food(next_pos):
 
 # появление буста
 def boost_spawn(next_pos):
-    if len(cfg.current_boost) < 2:
+    if len(cfg.current_boost) < 1:
         boost_pos = [
             random.randrange(cfg.FIELD_LEFT + 2 * cfg.BLOCK, cfg.FIELD_RIGHT - 2 * cfg.BLOCK, cfg.BLOCK), 
             random.randrange(cfg.FIELD_UP + 2 * cfg.BLOCK, cfg.FIELD_DOWN - 2 * cfg.BLOCK, cfg.BLOCK)
@@ -47,11 +47,11 @@ def draw_grid(screen):
     #горизонтальные линии. -80 - отступ
     y = cfg.upper_edge
     while y <= cfg.HEIGHT - cfg.down_edge:
-        pygame.draw.line(screen, (243,227,253), (cfg.rl_edge, y), (cfg.WIDTH - cfg.rl_edge, y), 2)
+        pygame.draw.line(screen, (204,229,245), (cfg.rl_edge, y), (cfg.WIDTH - cfg.rl_edge, y), 2)
         y += cfg.BLOCK
 
     #вертикальные
     x = cfg.rl_edge
     while x <= cfg.WIDTH - cfg.rl_edge:
-        pygame.draw.line(screen, (243,227,253), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
+        pygame.draw.line(screen, (204,229,245), (x, cfg.upper_edge), (x, cfg.HEIGHT - cfg.down_edge), 2)
         x += cfg.BLOCK

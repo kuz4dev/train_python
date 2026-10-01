@@ -14,7 +14,7 @@ def gameover_screen():
     while cfg.showing_game_over:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_x or event.type == pygame.QUIT:
+                if event.scancode == pygame.KSCAN_X:
                     cfg.showing_game_over = False
 
         cfg.screen.blit(cfg.over_background_image, (0, 0))

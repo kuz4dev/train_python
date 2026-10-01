@@ -11,10 +11,10 @@ from screens import (
 pygame.init()
 
 #ивент на время для еды
-food_event = pygame.USEREVENT +1 
+food_event = pygame.USEREVENT + 1 
 pygame.time.set_timer(food_event, 2500)
 
-boost_event = pygame.USEREVENT +2 
+boost_event = pygame.USEREVENT + 2 
 pygame.time.set_timer(boost_event, 45000)
 
 obstacle_event = pygame.USEREVENT + 3

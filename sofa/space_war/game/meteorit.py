@@ -10,17 +10,17 @@ class Meteorit:
         self.speed = cfg.meteorit_speed
         #картинка
         self.image = cfg.meteorit_image
-        # x метеорита 
-        self.x = cfg.meteorit_x - self.radius + 130
+        # x метеорита
+        self.x = cfg.WIDTH + self.radius
         # y метеорита
-        self.y = random.randint(50, 600)
+        self.y = random.randint(self.radius, cfg.HEIGHT - self.radius)
     
     @property
     def rect(self):
         return pygame.Rect(self.x - self.radius // 2, self.y - self.radius // 2, self.radius, self.radius)
 
     def draw(self):
-        cfg.screen.blit(self.image, (self.x - self.radius, self.y - self.radius))
+        cfg.screen.blit(self.image, self.rect)
         
     def move(self):
         self.x -= self.speed

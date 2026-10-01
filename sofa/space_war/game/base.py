@@ -5,21 +5,28 @@ from configuration import config as cfg
 from .space_ship import Spaceship
 from .meteorit import Meteorit
 
+# - W - S
+
 #пока показывает основную игру
 def playng_game():
     # создаем экземпляры классов
     ship = Spaceship()
+    # создать список нажатых клавиш
+    pressed = set()
     
     while cfg.running:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                #если кнопка e нажата
-                if event.key == pygame.K_e:
+                pressed.add(event.scancode)
+                # если кнопка e нажата и нет паузы
+                if event.scancode == pygame.KSCAN_E and not cfg.paused:
                     #выпуск пули
                     cfg.bullets.append(ship.shoot())
+            if event.type == pygame.KEYUP:
+                pressed.discard(event.scancode)
             if event.type == pygame.KEYDOWN:
                 #если нажат таб
-                if event.key == pygame.K_TAB:
+                if event.scancode == pygame.KSCAN_TAB:
                     # если игра на паузе
                     if cfg.paused:
                         #постави
@@ -28,7 +35,7 @@ def playng_game():
                     else:
                         pygame.mixer.music.pause()
                     cfg.paused = not cfg.paused
-                if event.key == pygame.K_c:
+                if event.scancode == pygame.KSCAN_C:
                     cfg.music = not cfg.music
                     if not cfg.paused:
                         if cfg.music:
@@ -37,7 +44,7 @@ def playng_game():
                             pygame.mixer.music.pause()
                     
         if not cfg.paused:
-            ship.move(pygame.key.get_pressed())
+            ship.move(pressed)
 
             # Логика метеоритов
             cfg.spawn_timer += 1

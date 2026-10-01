@@ -34,7 +34,7 @@ meteorit_x = WIDTH - 30
 #высота метеорита
 meteorit_y = HEIGHT
 #радиус метеорита
-meteorit_radius = 15 * 4
+meteorit_radius = 60
 #скорость метеорита
 meteorit_speed = 5
 
