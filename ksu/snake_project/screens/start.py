@@ -7,8 +7,8 @@ def show_start(screen, pause_font, clock):
         screen.blit(cfg.bedroom_background, (0, 0))
         screen.blit(cfg.console_image, cfg.console_rect)
         
-        opening_text = pause_font.render(f"Нажмите пробел для начала игры", True, (82,87,91))
-        opening_text_rect = opening_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))
+        opening_text = pause_font.render(f"Нажмите пробел для начала игры", True, (219,236,250))
+        opening_text_rect = opening_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) + 30))
         screen.blit(opening_text, opening_text_rect)
 
         for event in pygame.event.get():
