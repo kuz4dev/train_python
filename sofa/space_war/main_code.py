@@ -22,3 +22,8 @@ gameover_screen()
 pygame.display.flip()
 
 pygame.quit()
+
+
+
+# TODO:
+# 1. Окно не закрывается крестиком

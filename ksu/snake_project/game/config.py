@@ -2,6 +2,7 @@ import pygame
 import os
 
 pygame.init()
+pygame.mixer.init()
 
 # размеры экрана и блока
 WIDTH = 1000
@@ -89,4 +90,9 @@ def load_assets():
     food_image_strawberry = pygame.transform.scale(food_image_strawberry, (BLOCK, BLOCK))
     
     food_image = [food_image_apple, food_image_strawberry]
+
+def load_sound():
+    global game_cycle_soundtrack
+
+    game_cycle_soundtrack = pygame.mixer.music.load(os.path.join(ASSETS_DIR, "sound", "ZZZ-Camillia-Golden-Week-OST_-Ambient-V2-_Zenless-Zone-Zero_.mp3"))
 

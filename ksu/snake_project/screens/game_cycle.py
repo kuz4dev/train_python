@@ -11,6 +11,11 @@ from game import (
 snake = Snake()
 
 def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event):
+
+    cfg.load_sound()
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
+
     while cfg.running:
         next_pos = snake.get_next_position()
 
@@ -133,3 +138,5 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
         pygame.display.flip()
 
         clock.tick(cfg.speed)
+
+    pygame.mixer.music.stop()

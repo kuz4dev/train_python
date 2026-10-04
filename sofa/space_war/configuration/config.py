@@ -17,6 +17,14 @@ HEIGHT = 600
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+#ширина кнопки
+button_width = 200
+#высота кнопки
+button_height = 50
+#положение кнопки (по центру экрана)
+button_x = WIDTH // 2 - button_width // 2
+button_y = HEIGHT // 2 - button_height // 2
+
 #широта корабля
 spaceship_width = 110
 #высота корабля

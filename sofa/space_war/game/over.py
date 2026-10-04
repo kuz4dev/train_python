@@ -13,6 +13,8 @@ def gameover_screen():
     
     while cfg.showing_game_over:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                cfg.showing_game_over = False
             if event.type == pygame.KEYDOWN:
                 if event.scancode == pygame.KSCAN_X:
                     cfg.showing_game_over = False
@@ -28,3 +30,4 @@ def gameover_screen():
         cfg.screen.blit(game_over_X, (cfg.WIDTH // 2 - game_over_X.get_width() // 2, cfg.HEIGHT - game_over_X.get_height() // 2 - 30))
 
         pygame.display.flip()
+        cfg.clock.tick(60)
