@@ -31,6 +31,7 @@ class Snake:
         #проверка на столкновение с едой
         for food in cfg.current_food:
             if food[:2] == self.position:
+                cfg.sft_eat.play()
                 cfg.current_food.remove(food)
                 ate = True
                 cfg.score += 5000
@@ -59,6 +60,7 @@ class Snake:
         # врезание в змейку и ускорение-возвращение
         for boost in cfg.current_boost:
             if boost == self.position:
+                cfg.sft_buff.play()
                 cfg.current_boost.remove(boost)
                 cfg.speed += cfg.SPEED_BOOST
 

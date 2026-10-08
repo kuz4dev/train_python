@@ -13,8 +13,13 @@ snake = Snake()
 def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event):
 
     cfg.load_sound()
+    
+    cfg.sft_buff.set_volume(0.1)
+    cfg.sft_collision.set_volume(0.1)
+    cfg.sft_eat.set_volume(0.1)
+    
     pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.set_volume(0.1)
 
     while cfg.running:
         next_pos = snake.get_next_position()
@@ -109,11 +114,13 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
             for obs in cfg.current_obstacles:
                 for block in obs:
                     if next_pos == block:
+                        cfg.sft_collision.play()
                         cfg.game_over = True
                         cfg.running = False
 
             # проверка на столкновение с границами и врезание змейки в себя
             if snake.check_collision_border() or snake.self_collision():
+                cfg.sft_collision.play()
                 #sound
 
                 # crash_time = pygame.USEREVENT +2
@@ -126,8 +133,6 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
             #ускорение-возвращение
             snake.get_boost()
                 
-
-
         #окно паузы
         if cfg.paused:
             # -text

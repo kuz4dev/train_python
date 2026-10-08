@@ -11,10 +11,10 @@ from screens import (
 pygame.init()
 
 #ивент на время для еды
-food_event = pygame.USEREVENT + 1 
+food_event = pygame.USEREVENT + 1
 pygame.time.set_timer(food_event, 2500)
 
-boost_event = pygame.USEREVENT + 2 
+boost_event = pygame.USEREVENT + 2
 pygame.time.set_timer(boost_event, 45000)
 
 obstacle_event = pygame.USEREVENT + 3
@@ -40,9 +40,7 @@ show_end(screen, pause_font, clock)
 
 pygame.quit()
 
+# TODO:
+# 1. Доработать так чтобы клавиши работали на обоих языках
 
-# звук при паузе, геймовере, кратком столкновении со стеной
 
-# картинки и змейку градиентную если получится
-
-# TODO: вынести подгрузку ассетов в конфиг, также туда вынести scree и clock

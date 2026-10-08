@@ -92,7 +92,11 @@ def load_assets():
     food_image = [food_image_apple, food_image_strawberry]
 
 def load_sound():
-    global game_cycle_soundtrack
+    global game_cycle_soundtrack, sft_eat, sft_collision, sft_buff
 
     game_cycle_soundtrack = pygame.mixer.music.load(os.path.join(ASSETS_DIR, "sound", "ZZZ-Camillia-Golden-Week-OST_-Ambient-V2-_Zenless-Zone-Zero_.mp3"))
+    sft_eat = pygame.mixer.Sound(os.path.join(ASSETS_DIR, "sound", "pepSound2.mp3"))
+    sft_collision = pygame.mixer.Sound(os.path.join(ASSETS_DIR, "sound", "pepSound4.mp3"))
+    sft_buff = pygame.mixer.Sound(os.path.join(ASSETS_DIR, "sound", "pepSound1.mp3"))
+    
 

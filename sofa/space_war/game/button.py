@@ -4,22 +4,22 @@ import os
 from configuration import config as cfg
 
 class Button():
-    def __init__(self, text):
+    def __init__(self, text, text_color=(255, 255, 255)):
         self.width = cfg.button_width
         self.height = cfg.button_height
         self.x = cfg.button_x
         self.y = cfg.button_y
         self.font = cfg.font
         self.text = text
-        self.text_color = (255, 255, 255)
+        self.text_color = text_color
 
 
     @property
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
-    def draw(self):
-        pygame.draw.rect(cfg.screen, (37, 10, 20), self.rect)
+    def draw(self, color=(37, 10, 20)):
+        pygame.draw.rect(cfg.screen, color, self.rect)
 
         text_surface = self.font.render(self.text, True, self.text_color)
         text_rect = text_surface.get_rect(center=self.rect.center)

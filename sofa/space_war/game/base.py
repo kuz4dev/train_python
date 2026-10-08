@@ -5,8 +5,6 @@ from configuration import config as cfg
 from .space_ship import Spaceship
 from .meteorit import Meteorit
 
-# - W - S
-
 #пока показывает основную игру
 def playng_game():
     # создаем экземпляры классов
@@ -16,14 +14,19 @@ def playng_game():
     
     while cfg.running:
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                cfg.running = False
+                
             if event.type == pygame.KEYDOWN:
                 pressed.add(event.scancode)
                 # если кнопка e нажата и нет паузы
                 if event.scancode == pygame.KSCAN_E and not cfg.paused:
                     #выпуск пули
                     cfg.bullets.append(ship.shoot())
+                    
             if event.type == pygame.KEYUP:
                 pressed.discard(event.scancode)
+                
             if event.type == pygame.KEYDOWN:
                 #если нажат таб
                 if event.scancode == pygame.KSCAN_TAB:

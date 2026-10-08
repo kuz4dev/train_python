@@ -16,8 +16,9 @@ def initial_screen():
         button.draw()
 
         for event in pygame.event.get():
-            # print(event)
-            # print(button.is_clicked(event))
+            if event.type == pygame.QUIT:
+                cfg.initial_window = False
+                
             if button.is_clicked(event):
                 #закрытие начального окна
                 cfg.initial_window = False
