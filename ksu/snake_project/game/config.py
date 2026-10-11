@@ -69,7 +69,7 @@ ASSETS_DIR = os.path.join(BASE_DIR, '..', 'snake_assets')
 def load_assets():
     global snake_game_background, bedroom_background, console_image, console_rect, food_image_apple, food_image_strawberry, food_image, obstacle_image, bedroom_rect
     
-    snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "snake_background.jpg")).convert()
+    snake_game_background = pygame.image.load(os.path.join(ASSETS_DIR, "back.jpg")).convert()
     snake_game_background = pygame.transform.scale(snake_game_background, (WIDTH, HEIGHT) )
 
     bedroom_background = pygame.image.load(os.path.join(ASSETS_DIR, "bedroom.png")).convert()

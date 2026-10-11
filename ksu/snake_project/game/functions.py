@@ -4,7 +4,7 @@ import pygame
 
 # препятствие
 def get_obstacle(next_pos):
-    if len(cfg.current_obstacles) < 5:
+    if len(cfg.current_obstacles) < 6:
 
         base_obstacle_block = [
             random.randrange(cfg.FIELD_LEFT + 4 * cfg.BLOCK, cfg.FIELD_RIGHT - 4 * cfg.BLOCK, cfg.BLOCK), 

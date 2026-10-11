@@ -7,6 +7,7 @@ from game import (
     draw_grid,
     Snake,
 )
+import random
 
 snake = Snake()
 
@@ -17,11 +18,12 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
     cfg.sft_buff.set_volume(0.1)
     cfg.sft_collision.set_volume(0.1)
     cfg.sft_eat.set_volume(0.1)
-    
+
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(0.1)
 
     while cfg.running:
+
         next_pos = snake.get_next_position()
 
         for event in pygame.event.get():
@@ -56,6 +58,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                         snake.change_direction('RIGHT')
 
         if not cfg.paused:
+
             # движение
             if snake.direction == 'UP':
                 snake.set_position([snake.position[0], snake.position[1] - cfg.BLOCK])
@@ -75,9 +78,9 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                 cfg.boost_end_time = 0
 
             # удаление препятствия для замены на новое
-            if (cfg.obstacle_lifetime and pygame.time.get_ticks() >= cfg.obstacle_lifetime) and len(cfg.current_obstacles) == 5:
+            if (cfg.obstacle_lifetime and pygame.time.get_ticks() >= cfg.obstacle_lifetime) and len(cfg.current_obstacles) == 6:
                 print("функция заработала")
-                cfg.current_obstacles.pop(0)
+                cfg.current_obstacles.remove(random.choice(cfg.current_obstacles))
                 cfg.obstacle_lifetime = 0
 
             screen.blit(cfg.snake_game_background, (0, 0))
