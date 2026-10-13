@@ -9,6 +9,8 @@ from game import (
 )
 import random
 
+
+
 snake = Snake()
 
 def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event):
@@ -18,6 +20,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
     cfg.sft_buff.set_volume(0.1)
     cfg.sft_collision.set_volume(0.1)
     cfg.sft_eat.set_volume(0.1)
+    cfg.paused_soundtrack.set_volume(0.1)
 
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(0.1)
@@ -43,8 +46,7 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     cfg.paused = not cfg.paused
-            
-
+                    
                 if not cfg.paused:
 
                     #изменение направления змейки
@@ -105,13 +107,12 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                 
             # буста
             for boost in cfg.current_boost:
-                pygame.draw.rect(screen, (172,253,139) , pygame.Rect(boost[0], boost[1], cfg.BLOCK, cfg.BLOCK))
+                screen.blit(cfg.boost_image, (boost[0], boost[1]))
 
             # препятствий поблочно
             for obs in cfg.current_obstacles:
                 for block in obs:
                     screen.blit(cfg.obstacle_image, (block[0], block[1]))
-                    # pygame.draw.rect(screen, (32,62,15), pygame.Rect(block[0], block[1], cfg.BLOCK, cfg.BLOCK))
 
             # столкновение с препятствием поблочно
             for obs in cfg.current_obstacles:
@@ -133,18 +134,22 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
                 cfg.game_over = True
                 cfg.running = False
 
-            #ускорение-возвращение
+            # ускорение-возвращение
             snake.get_boost()
                 
-        #окно паузы
+        # окно паузы
         if cfg.paused:
             # -text
+            pygame.mixer.music.pause()
+            cfg.paused_soundtrack.play(-1)
+
             paused_text = pause_font.render("Пауза!", True, (82,87,91))
             pause_rect = paused_text.get_rect(center = (cfg.WIDTH // 2, cfg.HEIGHT // 2))
             screen.blit(paused_text, pause_rect)
-
+        
         pygame.display.flip()
 
         clock.tick(cfg.speed)
 
     pygame.mixer.music.stop()
+    cfg.paused_soundtrack.stop()

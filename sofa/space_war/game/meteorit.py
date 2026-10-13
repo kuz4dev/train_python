@@ -14,14 +14,21 @@ class Meteorit:
         self.x = cfg.WIDTH + self.radius
         # y метеорита
         self.y = random.randint(self.radius, cfg.HEIGHT - self.radius)
+        # угол поворота метеорита   
+        self.angle = random.randint(0, 360)
+        # скорость вращения метеорита и выбор направления вращения
+        self.rotation_speed = random.choice([-1, 1]) * random.uniform(1, 4)
     
     @property
     def rect(self):
         return pygame.Rect(self.x - self.radius // 2, self.y - self.radius // 2, self.radius, self.radius)
 
     def draw(self):
-        cfg.screen.blit(self.image, self.rect)
+        rotated = pygame.transform.rotate(self.image, self.angle)
+        rotated_rect = rotated.get_rect(center=(self.x, self.y))
+        cfg.screen.blit(rotated, rotated_rect)
         
     def move(self):
         self.x -= self.speed
-
+        self.angle = (self.angle + self.rotation_speed) % 360
+        

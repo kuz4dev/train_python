@@ -46,6 +46,7 @@ meteorit_radius = 60
 #скорость метеорита
 meteorit_speed = 5
 
+
 #радиус снаряда
 bullet_radius = 25
 #скорость снаряда
