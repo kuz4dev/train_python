@@ -4,6 +4,7 @@ import random
 from configuration import config as cfg
 from .space_ship import Spaceship
 from .meteorit import Meteorit
+from .header import Header
 
 #пока показывает основную игру
 def playng_game():
@@ -11,6 +12,8 @@ def playng_game():
     ship = Spaceship()
     # создать список нажатых клавиш
     pressed = set()
+    # создаем экземпляр класса Header
+    header = Header()
     
     while cfg.running:
         for event in pygame.event.get():
@@ -106,13 +109,7 @@ def playng_game():
         
         ship.draw()
         
-        #Счет
-        score_text = cfg.font.render(f"Метеоритов отбито: {cfg.score}", True, (255, 255, 255))
-        #Жизни
-        lives_text = cfg.font.render(f"Полная поломка через: {ship.lives}", True, (255, 255, 255))
-        #вывод текстов
-        cfg.screen.blit(score_text, (25, 25))
-        cfg.screen.blit(lives_text, (cfg.WIDTH - 360, 25))
+        header.draw(ship.lives, cfg.score)
 
         #пауза
         if cfg.paused:

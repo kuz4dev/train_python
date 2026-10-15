@@ -41,6 +41,5 @@ show_end(screen, pause_font, clock)
 pygame.quit()
 
 # TODO:
-# 1. Доработать так чтобы клавиши работали на обоих языках
-
+# 1. 
 
