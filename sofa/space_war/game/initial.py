@@ -26,7 +26,7 @@ def initial_screen():
                 cfg.running = True
                 
                 #музыка
-                pygame.mixer.music.load(os.path.join(cfg.ASSETS_DIR, "main_track.mp3"))
+                pygame.mixer.music.load(cfg.music["main_track"])
                 pygame.mixer.music.set_volume(0.15)
                 pygame.mixer.music.play(-1)
 

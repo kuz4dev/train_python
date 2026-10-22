@@ -4,9 +4,9 @@ from configuration import config as cfg
 class Header:
     def __init__(self, text_color=(255, 255, 255)):
         # размер изображений жизней и очков
-        self.image_size = 55
+        self.image_size = cfg.header_image_size
         # отступ от края экрана для жизней и очков
-        self.indent = 15
+        self.indent = cfg.header_indent
         #изображение корабля (жизни)
         self.live_image = pygame.transform.scale(cfg.spaceship_image, (self.image_size, self.image_size))
         self.live_image = pygame.transform.rotate(self.live_image, 90)

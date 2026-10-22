@@ -36,8 +36,8 @@ class Spaceship:
 
     # ограничение экрана
     def clamp_to_screen(self):
-        if self.y < self.height / 2:
-            self.y = self.height / 2
+        if self.y < cfg.header_image_size + 2 * cfg.header_indent:
+            self.y = cfg.header_image_size + 2 * cfg.header_indent
         if self.y > cfg.HEIGHT - self.height:
             self.y = cfg.HEIGHT - self.height
             

@@ -10,7 +10,7 @@ def gameover_screen():
     button = Button("Закрыть") 
     # музыка геймовера  
     pygame.mixer.music.stop()
-    pygame.mixer.music.load(os.path.join(cfg.ASSETS_DIR, "over_track.mp3"))
+    pygame.mixer.music.load(cfg.music["over_track"])
     pygame.mixer.music.set_volume(0.15)
     pygame.mixer.music.play(-1)
     

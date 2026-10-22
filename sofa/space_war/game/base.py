@@ -128,6 +128,7 @@ def playng_game():
             cfg.screen.blit(control_text, control_rect)
             cfg.screen.blit(control_text2, control_rect2)
 
+        
         pygame.display.flip()
 
         #фпс

@@ -13,7 +13,7 @@ class Meteorit:
         # x метеорита
         self.x = cfg.WIDTH + self.radius
         # y метеорита
-        self.y = random.randint(self.radius, cfg.HEIGHT - self.radius)
+        self.y = random.randint(self.radius + cfg.header_image_size + 2 * cfg.header_indent, cfg.HEIGHT - self.radius)
         # угол поворота метеорита   
         self.angle = random.randint(0, 360)
         # скорость вращения метеорита и выбор направления вращения

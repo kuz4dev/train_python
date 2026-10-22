@@ -1,9 +1,15 @@
 import pygame
-
+from game import record as rcd
+from game import config as cfg
 from game import config as cfg
 
 def show_end(screen, pause_font, clock):
-    # окно конца игры
+    # проверяем и записываем новый рекорд, если он есть
+    read_record = rcd.load_record()
+    print(f"Предыдущий рекорд: {read_record}")
+    if cfg.score > read_record: 
+        rcd.save_record(cfg.score)
+
     while cfg.game_over:
 
         screen.blit(cfg.bedroom_background, cfg.bedroom_rect)
@@ -14,12 +20,16 @@ def show_end(screen, pause_font, clock):
         screen.blit(go_show_score, go_score_rect)
 
         exit_go_text = pause_font.render("Нажмите X для выхода", True, (176,176,176))
-        go_exit_rect = exit_go_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) - 5) )
+        go_exit_rect = exit_go_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) - 5))
         screen.blit(exit_go_text, go_exit_rect)
+
+        record_text = pause_font.render(f"Рекорд: {rcd.load_record()}", True, (176,176,176))
+        record_rect = record_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) - 35))
+        screen.blit(record_text, record_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_x:
+                if event.scancode == pygame.KSCAN_X:
                     cfg.game_over = False
 
         pygame.display.flip()

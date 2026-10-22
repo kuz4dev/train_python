@@ -17,6 +17,11 @@ HEIGHT = 600
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# размер изображений жизней и очков
+header_image_size = 55
+# отступ от края экрана для жизней и очков
+header_indent = 15
+
 #ширина кнопки
 button_width = 200
 #высота кнопки
@@ -97,3 +102,18 @@ meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteor
 bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
+
+# shoot_sound = pygame.mixer.Sound("shoot.mp3")
+# over_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "over_track.mp3"))
+# main_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "main_track.mp3"))
+
+music = {
+    "over_track": os.path.join(ASSETS_DIR, "over_track.mp3"),
+    "main_track": os.path.join(ASSETS_DIR, "main_track.mp3")
+}
+
+sound = {
+    "shoot_sound": os.path.join(ASSETS_DIR, "shoot.mp3"),
+    "munis_lives_sound": os.path.join(ASSETS_DIR, "minus_lives.mp3"),
+    "explosion_sound": os.path.join(ASSETS_DIR, "explosion.mp3"),
+}

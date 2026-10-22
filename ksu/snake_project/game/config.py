@@ -65,6 +65,7 @@ score = 0
 # папки - пути
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, '..', 'snake_assets')
+RECORD_DIR = os.path.join(BASE_DIR, '..', 'files', 'record.json')
 
 def load_assets():
     global snake_game_background, bedroom_background, console_image, console_rect, food_image_apple, food_image_strawberry, food_image, obstacle_image, bedroom_rect, boost_image
