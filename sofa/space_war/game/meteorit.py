@@ -7,7 +7,7 @@ class Meteorit:
         #радиус метеорита
         self.radius = cfg.meteorit_radius
         #скорость метеорита
-        self.speed = cfg.meteorit_speed
+        self.speed = random.randint(3, 7)
         #картинка
         self.image = cfg.meteorit_image
         # x метеорита
@@ -17,7 +17,7 @@ class Meteorit:
         # угол поворота метеорита   
         self.angle = random.randint(0, 360)
         # скорость вращения метеорита и выбор направления вращения
-        self.rotation_speed = random.choice([-1, 1]) * random.uniform(1, 4)
+        self.rotation_speed = random.choice([-1, 1]) * self.speed
     
     @property
     def rect(self):

@@ -49,7 +49,7 @@ meteorit_y = HEIGHT
 #радиус метеорита
 meteorit_radius = 60
 #скорость метеорита
-meteorit_speed = 5
+# meteorit_speed = 0
 
 
 #радиус снаряда

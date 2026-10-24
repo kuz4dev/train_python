@@ -13,14 +13,16 @@ pygame.init()
 #название игры
 pygame.display.set_caption("Леталки!")
 
-initial_screen()
+while cfg.new_game:
+    initial_screen()
+    playng_game()
+    gameover_screen()
 
-playng_game()
 
-gameover_screen()
+# if New_game:
+#     main_game
 
 pygame.display.flip()
-
 pygame.quit()
 
 # 22.10 - Добавить звуки на выстрел и столкновение с метеоритом (корабль и метеорит) - найти звуки
@@ -36,6 +38,3 @@ pygame.quit()
 # Далекие планы - сохранение в файл
 
 # TODO
-# сделать пересчет границ спавна метеоритов и движения корабля (чтобы не заезжали на жизни и счет)
-
-# для жизней, отдельный класс.. метеориты просто 3 и изображение
