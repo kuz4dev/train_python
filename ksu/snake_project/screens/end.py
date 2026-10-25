@@ -7,6 +7,7 @@ def show_end(screen, pause_font, clock):
     # проверяем и записываем новый рекорд, если он есть
     read_record = rcd.load_record()
     print(f"Предыдущий рекорд: {read_record}")
+    
     if cfg.score > read_record: 
         rcd.save_record(cfg.score)
 
@@ -24,7 +25,7 @@ def show_end(screen, pause_font, clock):
         screen.blit(exit_go_text, go_exit_rect)
 
         record_text = pause_font.render(f"Рекорд: {rcd.load_record()}", True, (176,176,176))
-        record_rect = record_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) - 35))
+        record_rect = record_text.get_rect(center = (cfg.WIDTH // 2, (cfg.HEIGHT // 2) + 30))
         screen.blit(record_text, record_rect)
 
         for event in pygame.event.get():

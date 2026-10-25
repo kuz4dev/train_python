@@ -18,10 +18,6 @@ while cfg.new_game:
     playng_game()
     gameover_screen()
 
-
-# if New_game:
-#     main_game
-
 pygame.display.flip()
 pygame.quit()
 
@@ -36,5 +32,3 @@ pygame.quit()
 # 2. эффект полета пуль и метеоритов
 
 # Далекие планы - сохранение в файл
-
-# TODO

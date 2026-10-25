@@ -18,6 +18,7 @@ def initial_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 cfg.initial_window = False
+                cfg.new_game = False
                 
             if button.is_clicked(event):
                 #закрытие начального окна
@@ -26,7 +27,7 @@ def initial_screen():
                 cfg.running = True
                 
                 #музыка
-                pygame.mixer.music.load(cfg.music["main_track"])
+                pygame.mixer.music.load(cfg.music_loader["main_track"])
                 pygame.mixer.music.set_volume(0.15)
                 pygame.mixer.music.play(-1)
 

@@ -19,6 +19,7 @@ def playng_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 cfg.running = False
+                cfg.new_game = False
                 
             if event.type == pygame.KEYDOWN:
                 pressed.add(event.scancode)

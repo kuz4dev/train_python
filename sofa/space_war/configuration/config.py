@@ -48,8 +48,6 @@ meteorit_x = WIDTH - 30
 meteorit_y = HEIGHT
 #радиус метеорита
 meteorit_radius = 60
-#скорость метеорита
-# meteorit_speed = 0
 
 
 #радиус снаряда
@@ -73,6 +71,8 @@ music = True
 running = False
 initial_window = True
 showing_game_over = False
+
+new_game = True
 
 #шрифты
 font = pygame.font.Font(os.path.join(ASSETS_DIR, "pixelmplusbold.ttf"), 16)
@@ -107,12 +107,12 @@ bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radiu
 # over_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "over_track.mp3"))
 # main_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "main_track.mp3"))
 
-music = {
+music_loader = {
     "over_track": os.path.join(ASSETS_DIR, "over_track.mp3"),
     "main_track": os.path.join(ASSETS_DIR, "main_track.mp3")
 }
 
-sound = {
+sound_loader = {
     "shoot_sound": os.path.join(ASSETS_DIR, "shoot.mp3"),
     "munis_lives_sound": os.path.join(ASSETS_DIR, "minus_lives.mp3"),
     "explosion_sound": os.path.join(ASSETS_DIR, "explosion.mp3"),
