@@ -1,9 +1,12 @@
 import pygame
 from game import record as rcd
 from game import config as cfg
-from game import config as cfg
+from game import Button
+
+end_button = Button((187, 504), 35)
 
 def show_end(screen, pause_font, clock):
+    
     # проверяем и записываем новый рекорд, если он есть
     read_record = rcd.load_record()
     print(f"Предыдущий рекорд: {read_record}")
@@ -32,6 +35,14 @@ def show_end(screen, pause_font, clock):
             if event.type == pygame.KEYDOWN:
                 if event.scancode == pygame.KSCAN_X:
                     cfg.game_over = False
+
+            if end_button.is_clicked(event):
+                # какие действия
+                # начать новую игры
+                cfg.game_over = False
+                cfg.running = True
+                
+                # TODO: надо все обнулять если начинаем заново - создать просто функцию, которая будет обнулять нужные значения и вызвать тут
 
         pygame.display.flip()
             

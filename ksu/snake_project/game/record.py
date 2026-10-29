@@ -9,7 +9,6 @@ def load_record():
         return data.get("record", 0)
     except:
         return 0
-        
 
 def save_record(score):
     with open(cfg.RECORD_DIR, 'w', encoding='utf-8') as file:

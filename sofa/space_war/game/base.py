@@ -27,6 +27,8 @@ def playng_game():
                 if event.scancode == pygame.KSCAN_E and not cfg.paused:
                     #выпуск пули
                     cfg.bullets.append(ship.shoot())
+                    cfg.sound_loader["shoot_sound"].play()
+
                     
             if event.type == pygame.KEYUP:
                 pressed.discard(event.scancode)
@@ -78,6 +80,7 @@ def playng_game():
                 hit = False
 
                 if spaceship_rect.colliderect(meteorit.rect):
+                    cfg.sound_loader["munis_lives_sound"].play()
                     hit = True
                     alive = ship.minus_lives()
                     cfg.running = alive
@@ -85,8 +88,9 @@ def playng_game():
 
                 for bullet in cfg.bullets:
                     bullet_rect = pygame.Rect(bullet["x"] - cfg.bullet_radius // 2, bullet["y"] - cfg.bullet_radius // 2, cfg.bullet_radius, cfg.bullet_radius)
-                    
+
                     if bullet_rect.colliderect(meteorit.rect):
+                        cfg.sound_loader["bang_sound"].play()
                         hit = True
                         cfg.score += 1
                         if bullet in cfg.bullets:

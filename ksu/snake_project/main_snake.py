@@ -32,11 +32,12 @@ score_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'DigitalNumbers-Regul
 
 pause_font = pygame.font.Font(os.path.join(cfg.ASSETS_DIR, 'en-us.ttf'), 18)
 
-show_start(screen, pause_font, clock)
+while cfg.is_open:
+    show_start(screen, pause_font, clock)
 
-game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event)
+    game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event)
 
-show_end(screen, pause_font, clock)
+    show_end(screen, pause_font, clock)
 
 pygame.quit()
 

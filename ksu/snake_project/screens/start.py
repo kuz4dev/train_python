@@ -1,6 +1,8 @@
 import pygame
-
+from game import Button
 from game import config as cfg
+
+start_button = Button((187, 504), 35)
 
 def show_start(screen, pause_font, clock):
     while cfg.start_screen:
@@ -16,7 +18,21 @@ def show_start(screen, pause_font, clock):
                 if event.key == pygame.K_SPACE:
                     cfg.start_screen = False
                     cfg.running = True
+                    
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print("Mouse button pressed at:", event.pos)
+                
+            if start_button.is_clicked(event):
+                # какие действия 
+                # начать игру
+                cfg.start_screen = False
+                cfg.running = True
+                print('наша кнопка нажата')
 
         pygame.display.flip()
         
         clock.tick(cfg.speed)
+        
+        
+# Mouse button pressed at: (813, 504) - right click
+# Mouse button pressed at: (185, 504) - left click

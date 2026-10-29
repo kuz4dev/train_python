@@ -22,6 +22,9 @@ running = False
 # пауза
 paused = False
 
+# переменная открытого окна
+is_open = True
+
 #счет
 score = 0
 

@@ -9,6 +9,9 @@ clock = pygame.time.Clock()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Папка с ассетами
 ASSETS_DIR = os.path.join(BASE_DIR, "..", "assets")
+# Путь к записям информации о игре
+RECORD_DIR = os.path.join(BASE_DIR, "..", "records")
+
 
 #ширина окна
 WIDTH = 800
@@ -102,18 +105,16 @@ meteorit_image = pygame.transform.scale(meteorit_image, (meteorit_radius, meteor
 bullet_image = pygame.image.load(os.path.join(ASSETS_DIR, "bullet.png")).convert_alpha()
 bullet_image = pygame.transform.scale(bullet_image, (bullet_radius, bullet_radius))
 
-
-# shoot_sound = pygame.mixer.Sound("shoot.mp3")
-# over_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "over_track.mp3"))
-# main_track = pygame.mixer.music(os.path.join(ASSETS_DIR, "main_track.mp3"))
-
 music_loader = {
     "over_track": os.path.join(ASSETS_DIR, "over_track.mp3"),
     "main_track": os.path.join(ASSETS_DIR, "main_track.mp3")
 }
 
 sound_loader = {
-    "shoot_sound": os.path.join(ASSETS_DIR, "shoot.mp3"),
-    "munis_lives_sound": os.path.join(ASSETS_DIR, "minus_lives.mp3"),
-    "explosion_sound": os.path.join(ASSETS_DIR, "explosion.mp3"),
+    "shoot_sound": pygame.mixer.Sound(os.path.join(ASSETS_DIR, "shoot.mp3")),
+    "munis_lives_sound": pygame.mixer.Sound(os.path.join(ASSETS_DIR, "minus_lives.mp3")),
+    "bang_sound": pygame.mixer.Sound(os.path.join(ASSETS_DIR, "bam.mp3")),
 }
+
+for sound in sound_loader.values():
+    sound.set_volume(0.2)
