@@ -3,3 +3,4 @@ from .over import *
 from .base import *
 from .space_ship import *
 from .meteorit import *
+from .record import *

@@ -10,8 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Папка с ассетами
 ASSETS_DIR = os.path.join(BASE_DIR, "..", "assets")
 # Путь к записям информации о игре
-RECORD_DIR = os.path.join(BASE_DIR, "..", "records")
-
+RECORD_DIR = os.path.join(BASE_DIR, "..", "records", "info.json")
 
 #ширина окна
 WIDTH = 800

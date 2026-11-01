@@ -2,8 +2,10 @@ import pygame
 from game import record as rcd
 from game import config as cfg
 from game import Button
+from game import reset_game
 
-end_button = Button((187, 504), 35)
+new_start_button = Button((187, 504), 35)
+exit_button = Button((813, 504), 35)
 
 def show_end(screen, pause_font, clock):
     
@@ -36,13 +38,18 @@ def show_end(screen, pause_font, clock):
                 if event.scancode == pygame.KSCAN_X:
                     cfg.game_over = False
 
-            if end_button.is_clicked(event):
+            if new_start_button.is_clicked(event):
                 # какие действия
-                # начать новую игры
+                # начать новую игру
+                reset_game()
                 cfg.game_over = False
                 cfg.running = True
+
+            if exit_button.is_clicked(event) or event.type == pygame.QUIT:
+                cfg.game_over = False
+                cfg.is_open = False
+
                 
-                # TODO: надо все обнулять если начинаем заново - создать просто функцию, которая будет обнулять нужные значения и вызвать тут
 
         pygame.display.flip()
             

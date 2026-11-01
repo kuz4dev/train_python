@@ -3,6 +3,7 @@ from game import Button
 from game import config as cfg
 
 start_button = Button((187, 504), 35)
+exit_button = Button((813, 504), 35)
 
 def show_start(screen, pause_font, clock):
     while cfg.start_screen:
@@ -28,6 +29,11 @@ def show_start(screen, pause_font, clock):
                 cfg.start_screen = False
                 cfg.running = True
                 print('наша кнопка нажата')
+
+            if exit_button.is_clicked(event) or event.type == pygame.QUIT:
+                cfg.start_screen = False
+                cfg.is_open = False
+
 
         pygame.display.flip()
         

@@ -62,8 +62,6 @@ current_food = []
 obstacles = []
 current_obstacles = []
 
-#счет
-score = 0
 
 # папки - пути
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

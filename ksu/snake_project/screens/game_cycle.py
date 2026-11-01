@@ -8,16 +8,18 @@ from game import (
     Snake,
 )
 import random
-import json
-
-
-
-snake = Snake()
 
 # создать список нажатых клавиш
 pressed = set()
 
 def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, obstacle_event):
+    snake = Snake()
+    
+    pygame.time.set_timer(food_event, 2500)
+    pygame.time.set_timer(boost_event, 45000)
+    pygame.time.set_timer(obstacle_event, 25000)
+    
+    pygame.event.clear([food_event, boost_event, obstacle_event])  # очистка очереди событий перед началом игры
 
     cfg.load_sound()
     
@@ -35,7 +37,8 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                cfg.running = False 
+                cfg.running = False
+                cfg.is_open = False
 
             if event.type == food_event and not cfg.paused:
                 get_food(next_pos) 
@@ -164,6 +167,10 @@ def game_cycle(screen, score_font, pause_font, clock, food_event, boost_event, o
         pygame.display.flip()
 
         clock.tick(cfg.speed)
+        
+    pygame.time.set_timer(food_event, 0)
+    pygame.time.set_timer(boost_event, 0)
+    pygame.time.set_timer(obstacle_event, 0)
 
     pygame.mixer.music.stop()
     cfg.paused_soundtrack.stop()

@@ -53,8 +53,19 @@ class Snake:
         return self.position in self.body[1:]
 
     def draw_body(self, screen):
-        for one in self.body:
-            pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
+        head_color = pygame.Color(0, 255, 0)
+        # body_center_color = pygame.Color(0, 150, 0)
+        tail_color = pygame.Color(0, 200, 0)
+        
+        length = len(self.body)
+        # добавляем вычисление центрального блока
+        
+        for i, one in enumerate(self.body):
+            t = i / (length - 1) if length > 1 else 0
+            
+            color = head_color.lerp(tail_color, t)
+            
+            pygame.draw.rect(screen, color, pygame.Rect(one[0], one[1], cfg.BLOCK, cfg.BLOCK))
 
     def get_boost(self):
         # врезание в змейку и ускорение-возвращение

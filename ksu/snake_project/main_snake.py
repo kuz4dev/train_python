@@ -12,13 +12,8 @@ pygame.init()
 
 #ивент на время для еды
 food_event = pygame.USEREVENT + 1
-pygame.time.set_timer(food_event, 2500)
-
 boost_event = pygame.USEREVENT + 2
-pygame.time.set_timer(boost_event, 45000)
-
 obstacle_event = pygame.USEREVENT + 3
-pygame.time.set_timer(obstacle_event, 25000)
 
 clock = pygame.time.Clock()
 
@@ -42,5 +37,9 @@ while cfg.is_open:
 pygame.quit()
 
 # TODO:
-# 1. 
+# 1. Доделать кнопки (подсветка и так далее)
+# 2. Косметика - подобрать цвет сетки и сделать змейку красивой
+# 3. Делать паузу с сохранением результата в файл, чтобы можно было продолжить игру потом
+
+
 

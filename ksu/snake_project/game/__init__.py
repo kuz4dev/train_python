@@ -3,3 +3,4 @@ from .snake import *
 from .config import *
 from .record import *
 from .button_class import *
+from .reset import *
